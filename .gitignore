@@ -18,6 +18,9 @@
 # misc
 .DS_Store
 *.pem
+prettier.config.js
+graphql.schema.json
+generated
 
 # debug
 npm-debug.log*
