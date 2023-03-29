@@ -2,10 +2,19 @@ scalar Date
 
 type User {
   id: ID!
-  name: String
-  email: String
+  name: String!
+  email: String!
   emailVerified: Date
   image: String
+  createdAt: Date
+  updatedAt: Date
+}
+
+type Exercise {
+  id: ID!
+  targetPhrase: String!
+  blank: String!
+  correctAnswer: String!
   createdAt: Date
   updatedAt: Date
 }
