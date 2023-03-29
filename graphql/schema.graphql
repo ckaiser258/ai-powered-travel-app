@@ -1,0 +1,15 @@
+scalar Date
+
+type User {
+  id: ID!
+  name: String
+  email: String
+  emailVerified: Date
+  image: String
+  createdAt: Date
+  updatedAt: Date
+}
+
+type Query {
+  info: String!
+}
