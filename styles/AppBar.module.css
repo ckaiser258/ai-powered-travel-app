@@ -1,0 +1,49 @@
+.appBar {
+  background-color: #f8f8f8;
+  padding: 10px;
+  position: sticky;
+  top: 0;
+}
+
+.link {
+  color: #333;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.loginOrLogoutForm {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.loginOrLogoutForm p,
+.loginOrLogoutForm button {
+  background-color: transparent;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+}
+
+.loginOrLogoutForm button:hover {
+  text-decoration: underline;
+}
+
+nav ul.navList {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul.navList li {
+  margin-right: 10px;
+}
