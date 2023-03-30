@@ -16,12 +16,43 @@ interface MyContext {
 
 const server = new ApolloServer<MyContext>({
   typeDefs: fs.readFileSync(
-    path.join(path.resolve(process.cwd()), "schema.graphql"),
+    path.join(path.resolve(process.cwd()), "graphql/schema.graphql"),
     "utf8"
   ),
   resolvers: {
     Query,
-    Mutation,
+    Exercise: {
+      completions: (parent, args, context) => {
+        return context.prisma.exercise
+          .findUnique({
+            where: {
+              id: parent.id,
+            },
+          })
+          .completions();
+      },
+    },
+    Completion: {
+      exercise: (parent, args, context) => {
+        return context.prisma.completion
+          .findUnique({
+            where: {
+              id: parent.id,
+            },
+          })
+          .exercise();
+      },
+      user: (parent, args, context) => {
+        return context.prisma.completion
+          .findUnique({
+            where: {
+              id: parent.id,
+            },
+          })
+          .user();
+      },
+    },
+    // Mutation,
   },
 });
 

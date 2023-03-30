@@ -35,13 +35,45 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String       @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?      @unique
     emailVerified DateTime?
     image         String?
-    createdAt     DateTime  @default(now())
-    updatedAt     DateTime  @default(now()) @updatedAt
     accounts      Account[]
     sessions      Session[]
+    completions   Completion[]
+    createdAt     DateTime     @default(now())
+    updatedAt     DateTime     @default(now()) @updatedAt
+}
+
+enum DifficultyLevel {
+    beginner
+    intermediate
+    advanced
+}
+
+model Exercise {
+    id              String          @id @default(cuid())
+    targetPhrase    String
+    blank           String
+    correctAnswer   String
+    language        String
+    difficultyLevel DifficultyLevel
+    completions     Completion[]
+    createdAt       DateTime        @default(now())
+    updatedAt       DateTime        @default(now()) @updatedAt
+}
+
+model Completion {
+    id         String   @id @default(cuid())
+    exercise   Exercise @relation(fields: [exerciseId], references: [id])
+    exerciseId String
+    user       User     @relation(fields: [userId], references: [id])
+    userId     String
+    correct    Boolean
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @default(now()) @updatedAt
+
+    @@unique([exerciseId, userId])
 }

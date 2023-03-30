@@ -6,8 +6,15 @@ type User {
   email: String!
   emailVerified: Date
   image: String
+  completions: [Completion!]!
   createdAt: Date
   updatedAt: Date
+}
+
+enum ExerciseLevel {
+  beginner
+  intermediate
+  advanced
 }
 
 type Exercise {
@@ -15,6 +22,20 @@ type Exercise {
   targetPhrase: String!
   blank: String!
   correctAnswer: String!
+  language: String!
+  difficultyLevel: ExerciseLevel!
+  completions: [Completion!]!
+  createdAt: Date
+  updatedAt: Date
+}
+
+type Completion {
+  id: ID!
+  user: User!
+  userId: ID!
+  exercise: Exercise!
+  exerciseId: ID!
+  correct: Boolean
   createdAt: Date
   updatedAt: Date
 }
