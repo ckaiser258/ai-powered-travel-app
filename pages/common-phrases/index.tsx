@@ -42,7 +42,6 @@ const CommonPhrasesPage: NextPage = () => {
     }
 
     const bulletPoints = result.split("\n");
-    console.log(bulletPoints);
     return (
       <ul>
         {bulletPoints.map((bulletPoint, index) =>

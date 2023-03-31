@@ -1,4 +1,4 @@
-import { LanguageSelector } from "@/components/LanguageSelector";
+import { LanguageSelector } from "@/components/languageTranslations/LanguageSelector";
 import Head from "next/head";
 import { useState } from "react";
 import styles from "@/styles/styles.module.css";
@@ -44,44 +44,42 @@ export default function Home() {
         <title>AI Travel App</title>
       </Head>
 
-      <main>
-        <form onSubmit={onSubmit} className={styles.form}>
-          <h3>Translate:</h3>
-          <input
-            type="text"
-            name="textToTranslate"
-            placeholder="Enter text to translate"
-            value={textToTranslate}
-            onChange={(e) => setTextToTranslate(e.target.value)}
-            className={styles.input}
-          />
-          <br />
-          <h3>To:</h3>
-          <LanguageSelector
-            selectedLanguage={language}
-            onSelectLanguage={setLanguage}
-          />
-          <br />
-          <br />
-          <input
-            type="submit"
-            value="Generate translation"
-            className={styles.button}
-          />
-        </form>
+      <form onSubmit={onSubmit} className={styles.form}>
+        <h3>Translate:</h3>
+        <input
+          type="text"
+          name="textToTranslate"
+          placeholder="Enter text to translate"
+          value={textToTranslate}
+          onChange={(e) => setTextToTranslate(e.target.value)}
+          className={styles.input}
+        />
         <br />
-        <div className={loading || result ? styles.result : undefined}>
-          {loading && <div>Loading...</div>}
-          {result && (
-            <>
-              <h3>Original:</h3>
-              <p>{textToTranslate}</p> <br />
-              <h3>Translation:</h3>
-              <p>{result}</p>
-            </>
-          )}
-        </div>
-      </main>
+        <h3>To:</h3>
+        <LanguageSelector
+          selectedLanguage={language}
+          onSelectLanguage={setLanguage}
+        />
+        <br />
+        <br />
+        <input
+          type="submit"
+          value="Generate translation"
+          className={styles.button}
+        />
+      </form>
+      <br />
+      <div className={loading || result ? styles.result : undefined}>
+        {loading && <div>Loading...</div>}
+        {result && (
+          <>
+            <h3>Original:</h3>
+            <p>{textToTranslate}</p> <br />
+            <h3>Translation:</h3>
+            <p>{result}</p>
+          </>
+        )}
+      </div>
     </div>
   );
 }
