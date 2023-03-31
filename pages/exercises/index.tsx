@@ -1,4 +1,5 @@
 import ExerciseList from "@/components/exercises/ExerciseList";
+import { ExerciseLevel } from "@/generated/graphql";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
