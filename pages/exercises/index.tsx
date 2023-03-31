@@ -36,6 +36,8 @@ const ExercisesPage: NextPage = () => {
             new Error(`Request failed with status ${response.status}`)
           );
         }
+        // OpenAI returns a string that is a numbered list of exercises separated by newlines.
+        // This code splits the string into an array of exercises and removes the numbers.
         const lines = data.exercises.split("\n");
         const formattedExercises = lines.map((line) =>
           line.replace(/^\d+\. /, "")
