@@ -12,6 +12,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.10",
     "@as-integrations/next": "^1.2.0",
+    "@google-cloud/translate": "^7.2.0",
     "@graphql-codegen/typescript-operations": "^3.0.2",
     "@next-auth/prisma-adapter": "^1.0.5",
     "@types/node": "18.15.10",
