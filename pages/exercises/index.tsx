@@ -52,11 +52,7 @@ const ExercisesPage: NextPage = () => {
     fetchExercises();
   }, [difficultyLevel, language]);
 
-  const checkAnswer = async (
-    language: string,
-    input: string,
-    phrase: string
-  ) => {
+  const checkAnswer = async (input: string, language: string) => {
     try {
       const response = await fetch("api/googleTranslate", {
         method: "POST",
