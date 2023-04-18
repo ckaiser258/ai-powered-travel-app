@@ -21,7 +21,7 @@ const ExercisesPage: NextPage = () => {
     const fetchExercises = async () => {
       setLoading(true);
       try {
-        const response = await fetch("/api/generateExercises", {
+        const response = await fetch("/api/exercises/generateExercises", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -52,6 +52,33 @@ const ExercisesPage: NextPage = () => {
     fetchExercises();
   }, [difficultyLevel, language]);
 
+  const checkAnswer = async (
+    language: string,
+    input: string,
+    phrase: string
+  ) => {
+    try {
+      const response = await fetch("api/googleTranslate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: input, targetLanguage: language }),
+      });
+      const data = await response.json();
+      if (response.status !== 200) {
+        throw (
+          data.error ||
+          new Error(`Request failed with status ${response.status}`)
+        );
+      }
+      return data.response;
+    } catch (error) {
+      console.error(error);
+      alert(error.message);
+    }
+  };
+
   return (
     <>
       <h1>Exercises</h1>
@@ -64,15 +91,15 @@ const ExercisesPage: NextPage = () => {
           onChange={(e) => setLanguage(e.target.value)}
         >
           {/* Replace these with the user's saved languages */}
-          <option value="English">English</option>
-          <option value="Spanish">Spanish</option>
-          <option value="French">French</option>
-          <option value="German">German</option>
-          <option value="Italian">Italian</option>
-          <option value="Portuguese">Portuguese</option>
-          <option value="Russian">Russian</option>
-          <option value="Japanese">Japanese</option>
-          <option value="Chinese">Chinese</option>
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+          <option value="de">German</option>
+          <option value="it">Italian</option>
+          <option value="pt">Portuguese</option>
+          <option value="ru">Russian</option>
+          <option value="ja">Japanese</option>
+          <option value="zh">Chinese</option>
         </select>
         <label htmlFor="difficulty">Difficulty</label>
         <select
@@ -87,7 +114,11 @@ const ExercisesPage: NextPage = () => {
           ))}
         </select>
       </form>
-      <ExerciseList exercises={exercises || []} />
+      <ExerciseList
+        exercises={exercises || []}
+        checkAnswer={checkAnswer}
+        language={language}
+      />
     </>
   );
 };
