@@ -1,14 +1,11 @@
+import checkAnswer from "@/db/exercise/queries/checkAnswer";
 import { useState } from "react";
 
 interface ExerciseFormProps {
   language: string;
-  checkAnswer: (input: string, language: string) => void;
 }
 
-const ExerciseForm: React.FC<ExerciseFormProps> = ({
-  checkAnswer,
-  language,
-}) => {
+const ExerciseForm: React.FC<ExerciseFormProps> = ({ language }) => {
   const [textToTranslate, setTextToTranslate] = useState("");
 
   return (

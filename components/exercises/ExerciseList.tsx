@@ -16,7 +16,7 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
       {exercises.map((exercise) => (
         <li key={exercise.id}>
           <p>{exercise}</p>
-          <ExerciseForm checkAnswer={checkAnswer} language={language} />
+          <ExerciseForm language={language} />
         </li>
       ))}
     </ul>

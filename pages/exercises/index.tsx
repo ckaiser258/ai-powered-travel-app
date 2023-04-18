@@ -1,4 +1,6 @@
 import ExerciseList from "@/components/exercises/ExerciseList";
+import getExercises from "@/db/exercise/queries/getExercises";
+import { ExerciseLevel, Query } from "@/generated/graphql";
 import { ExerciseLevel } from "@/generated/graphql";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
@@ -18,62 +20,12 @@ const ExercisesPage: NextPage = () => {
   const { data: session } = useSession();
 
   useEffect(() => {
-    const fetchExercises = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch("/api/exercises/generateExercises", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ difficultyLevel, language }),
-        });
-
-        const data = await response.json();
-        if (response.status !== 200) {
-          throw (
-            data.error ||
-            new Error(`Request failed with status ${response.status}`)
-          );
-        }
-        // OpenAI returns a string that is a numbered list of exercises separated by newlines.
-        // This code splits the string into an array of exercises and removes the numbers.
-        const lines = data.exercises.split("\n");
-        const formattedExercises = lines.map((line) =>
-          line.replace(/^\d+\. /, "")
-        );
-        setExercises(formattedExercises);
-      } catch (error) {
-        console.error(error);
-        alert(error.message);
-      }
+    setLoading(true);
+    getExercises(difficultyLevel, language).then((data) => {
+      setExercises(data);
       setLoading(false);
-    };
-    fetchExercises();
+    });
   }, [difficultyLevel, language]);
-
-  const checkAnswer = async (input: string, language: string) => {
-    try {
-      const response = await fetch("api/googleTranslate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: input, targetLanguage: language }),
-      });
-      const data = await response.json();
-      if (response.status !== 200) {
-        throw (
-          data.error ||
-          new Error(`Request failed with status ${response.status}`)
-        );
-      }
-      return data.response;
-    } catch (error) {
-      console.error(error);
-      alert(error.message);
-    }
-  };
 
   return (
     <>
@@ -110,11 +62,7 @@ const ExercisesPage: NextPage = () => {
           ))}
         </select>
       </form>
-      <ExerciseList
-        exercises={exercises || []}
-        checkAnswer={checkAnswer}
-        language={language}
-      />
+      <ExerciseList exercises={exercises || []} language={language} />
     </>
   );
 };
