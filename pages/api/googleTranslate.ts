@@ -100,4 +100,4 @@ const translateText = async (
   }
 };
 
-export { detectLanguage, translateText };
+export default translateText;
