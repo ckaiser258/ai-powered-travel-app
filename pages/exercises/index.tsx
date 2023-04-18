@@ -13,7 +13,7 @@ const difficulties: ExerciseLevel[] = [
 const ExercisesPage: NextPage = () => {
   const [difficultyLevel, setDifficultyLevel] = useState(difficulties[0]);
   const [loading, setLoading] = useState(false);
-  const [language, setLanguage] = useState("English");
+  const [language, setLanguage] = useState("en");
   const [exercises, setExercises] = useState<string[]>([]);
   const { data: session } = useSession();
 
