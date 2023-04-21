@@ -1,18 +1,30 @@
 import checkAnswer from "@/db/exercise/queries/checkAnswer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ExerciseFormProps {
   language: string;
+  phrase: string;
 }
 
-const ExerciseForm: React.FC<ExerciseFormProps> = ({ language }) => {
+const ExerciseForm: React.FC<ExerciseFormProps> = ({ language, phrase }) => {
   const [textToTranslate, setTextToTranslate] = useState("");
+  const [isCorrectAnswer, setIsCorrectAnswer] = useState<boolean | null>(null);
 
-  return (
+  useEffect(() => {
+    if (isCorrectAnswer === false) {
+      setTimeout(() => {
+        setIsCorrectAnswer(null);
+      }, 1500);
+    }
+  }, [isCorrectAnswer]);
+
+  return isCorrectAnswer === null ? (
     <form
-      onSubmit={(event) => {
+      onSubmit={async (event) => {
         event.preventDefault();
-        checkAnswer(textToTranslate, language);
+        await checkAnswer(textToTranslate, language, phrase).then((data) => {
+          setIsCorrectAnswer(data);
+        });
         setTextToTranslate("");
       }}
     >
@@ -25,6 +37,8 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ language }) => {
       />
       <button type="submit">Check</button>
     </form>
+  ) : (
+    <p>{isCorrectAnswer ? "Correct!" : "Incorrect!"}</p>
   );
 };
 
