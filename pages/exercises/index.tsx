@@ -1,6 +1,5 @@
 import ExerciseList from "@/components/exercises/ExerciseList";
 import getExercises from "@/db/exercise/queries/getExercises";
-import { ExerciseLevel, Query } from "@/generated/graphql";
 import { ExerciseLevel } from "@/generated/graphql";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
