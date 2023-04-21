@@ -30,7 +30,6 @@ const ExercisesPage: NextPage = () => {
   return (
     <>
       <h1>Exercises</h1>
-      {loading && <p>Loading...</p>}
       <form>
         <label htmlFor="language">Language</label>
         <select
@@ -62,7 +61,11 @@ const ExercisesPage: NextPage = () => {
           ))}
         </select>
       </form>
-      <ExerciseList exercises={exercises || []} language={language} />
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ExerciseList exercises={exercises || []} language={language} />
+      )}
     </>
   );
 };
