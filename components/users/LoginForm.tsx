@@ -9,7 +9,7 @@ const LoginForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <button type="submit">Sign in</button>
+      <input type="submit" value="Sign in" />
     </form>
   );
 };

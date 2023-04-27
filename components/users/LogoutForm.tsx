@@ -9,7 +9,7 @@ const LogoutForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <button type="submit">Sign out</button>
+      <input type="submit" value="Sign out" />
     </form>
   );
 };

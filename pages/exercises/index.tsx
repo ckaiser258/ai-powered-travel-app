@@ -83,7 +83,7 @@ const ExercisesPage: NextPage = () => {
           <span style={{ color: "red" }}>Please select a language.</span>
         )}
 
-        <button type="submit">Generate Exercises</button>
+        <input type="submit" value="Generate Exercises" />
       </form>
       {loading ? (
         <p>Loading...</p>

@@ -44,7 +44,8 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ language, phrase }) => {
       {errors.textToTranslate && (
         <span style={{ color: "red" }}>This field is required</span>
       )}
-      <button type="submit">Check</button>
+      <input type="submit" value="Check" />
+      Check
     </form>
   ) : (
     <p>{isCorrectAnswer ? "Correct!" : "Incorrect!"}</p>
