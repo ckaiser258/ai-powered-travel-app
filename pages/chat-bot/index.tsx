@@ -1,14 +1,22 @@
 import { NextPage } from "next";
 import { useState } from "react";
 import styles from "@/styles/styles.module.css";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface FormValues {
+  prompt: string;
+}
 
 const ChatBotPage: NextPage = () => {
-  const [prompt, setPrompt] = useState("");
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<FormValues>();
   const [result, setResult] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     // Make sure the previous result is cleared when loading a new one.
     setResult("");
     setLoading(true);
@@ -18,7 +26,7 @@ const ChatBotPage: NextPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({ prompt: formData.prompt }),
       });
 
       const data = await response.json();
@@ -35,23 +43,24 @@ const ChatBotPage: NextPage = () => {
       alert(error.message);
     }
     setLoading(false);
-  }
+  };
 
   return (
     <div className={styles.container}>
-      <form onSubmit={onSubmit} className={styles.form}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <h3 className={styles.title}>
           Ask Our AI Travel Chat Bot Any Travel Question
         </h3>
         <textarea
-          name="prompt"
+          {...register("prompt", { required: true })}
           rows={5}
           cols={50}
           placeholder="Enter question"
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
           className={styles.textarea}
         />
+        {errors.prompt && (
+          <span style={{ color: "red" }}>Please enter a question.</span>
+        )}
         <br />
         <br />
         <input type="submit" value="Ask Chat Bot" className={styles.button} />
