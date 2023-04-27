@@ -1,14 +1,29 @@
 import checkAnswer from "@/db/exercise/queries/checkAnswer";
 import { useEffect, useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 
 interface ExerciseFormProps {
   language: string;
   phrase: string;
 }
 
+interface FormValues {
+  textToTranslate: string;
+}
+
 const ExerciseForm: React.FC<ExerciseFormProps> = ({ language, phrase }) => {
-  const [textToTranslate, setTextToTranslate] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
   const [isCorrectAnswer, setIsCorrectAnswer] = useState<boolean | null>(null);
+
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    await checkAnswer(data.textToTranslate, language, phrase).then((data) => {
+      setIsCorrectAnswer(data);
+    });
+  };
 
   useEffect(() => {
     if (isCorrectAnswer === false) {
@@ -19,22 +34,14 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ language, phrase }) => {
   }, [isCorrectAnswer]);
 
   return isCorrectAnswer === null ? (
-    <form
-      onSubmit={async (event) => {
-        event.preventDefault();
-        await checkAnswer(textToTranslate, language, phrase).then((data) => {
-          setIsCorrectAnswer(data);
-        });
-        setTextToTranslate("");
-      }}
-    >
+    <form onSubmit={handleSubmit(onSubmit)}>
       <input
-        type="text"
-        name="textToTranslate"
+        {...register("textToTranslate", { required: true })}
         placeholder="Enter your answer"
-        value={textToTranslate}
-        onChange={(e) => setTextToTranslate(e.target.value)}
       />
+      {errors.textToTranslate && (
+        <span style={{ color: "red" }}>This field is required</span>
+      )}
       <button type="submit">Check</button>
     </form>
   ) : (
