@@ -26,6 +26,8 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ language, phrase }) => {
   };
 
   useEffect(() => {
+    // If the user has answered the question but is incorrect,
+    // show the field again after 1.5 seconds.
     if (isCorrectAnswer === false) {
       setTimeout(() => {
         setIsCorrectAnswer(null);
