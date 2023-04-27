@@ -21,7 +21,7 @@
 }
 
 .loginOrLogoutForm p,
-.loginOrLogoutForm input {
+.loginOrLogoutForm input[type="submit"] {
   background-color: transparent;
   border: none;
   color: #333;
@@ -33,7 +33,7 @@
   text-decoration: none;
 }
 
-.loginOrLogoutForm input:hover {
+.loginOrLogoutForm input[type="submit"]:hover {
   text-decoration: underline;
 }
 
