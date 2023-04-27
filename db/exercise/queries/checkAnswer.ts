@@ -27,7 +27,7 @@ const checkAnswer = async (input: string, language: string, phrase: string) => {
     return distance <= similarityThreshold;
 
     // If it's found that the punctuation differences between the ChatGPT API generated phrases and the Google Translate API generated phrases
-    // are consistently causing issues in the similarity calculation, then the following code can be used instead of the above code
+    // are consistently causing issues in the similarity calculation, then the following code can be used instead of, or in addition to, the above code
     // to strip the punctuation from the ChatGPT API generated phrase and the Google Translate API generated phrase
     // before comparing them.
 
