@@ -1,13 +1,21 @@
 import { NextPage } from "next";
 import { useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface FormValues {
+  location: string;
+}
 
 const CommonPhrasesPage: NextPage = () => {
-  const [location, setLocation] = useState("");
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<FormValues>();
   const [result, setResult] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
 
-  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     // Make sure the previous result is cleared when loading a new one.
     setResult("");
     setLoading(true);
@@ -17,7 +25,7 @@ const CommonPhrasesPage: NextPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ location }),
+        body: JSON.stringify({ location: formData.location }),
       });
 
       const data = await response.json();
@@ -34,7 +42,7 @@ const CommonPhrasesPage: NextPage = () => {
       alert(error.message);
     }
     setLoading(false);
-  }
+  };
 
   function renderBulletPoints() {
     if (!result) {
@@ -53,15 +61,16 @@ const CommonPhrasesPage: NextPage = () => {
 
   return (
     <div>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <h3>Phrases to know:</h3>
         <input
+          {...register("location", { required: true })}
           type="text"
-          name="location"
           placeholder="Enter location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
         />
+        {errors.location && (
+          <span style={{ color: "red" }}>Please enter location.</span>
+        )}
         <br />
         <br />
         <input type="submit" value="Generate Common Phrases" />
