@@ -3,7 +3,13 @@ import getExercises from "@/db/exercise/queries/getExercises";
 import { ExerciseLevel } from "@/generated/graphql";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface FormValues {
+  difficultyLevel: ExerciseLevel;
+  language: string;
+}
 
 const difficulties: ExerciseLevel[] = [
   ExerciseLevel.Beginner,
@@ -12,30 +18,37 @@ const difficulties: ExerciseLevel[] = [
 ];
 
 const ExercisesPage: NextPage = () => {
-  const [difficultyLevel, setDifficultyLevel] = useState(difficulties[0]);
   const [loading, setLoading] = useState(false);
-  const [language, setLanguage] = useState("en");
   const [exercises, setExercises] = useState<string[]>([]);
   const { data: session } = useSession();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    getValues,
+  } = useForm<FormValues>();
 
-  useEffect(() => {
+  const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     setLoading(true);
-    getExercises(difficultyLevel, language).then((data) => {
+    getExercises(formData.difficultyLevel, formData.language).then((data) => {
       setExercises(data);
       setLoading(false);
     });
-  }, [difficultyLevel, language]);
+  };
 
   return (
     <>
       <h1>Exercises</h1>
-      <form>
-        <label htmlFor="language">Language</label>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <label htmlFor="language">Language:</label>
         <select
+          {...register("language", { required: true })}
           id="language"
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
+          defaultValue=""
         >
+          <option value="" disabled>
+            Select a language
+          </option>
           {/* Replace these with the user's saved languages */}
           <option value="en">English</option>
           <option value="es">Spanish</option>
@@ -47,23 +60,38 @@ const ExercisesPage: NextPage = () => {
           <option value="ja">Japanese</option>
           <option value="zh">Chinese</option>
         </select>
-        <label htmlFor="difficulty">Difficulty</label>
+        {errors.language && (
+          <span style={{ color: "red" }}>Please select a language.</span>
+        )}
+
+        <label htmlFor="difficulty">Difficulty:</label>
         <select
+          {...register("difficultyLevel", { required: true })}
           id="difficultyLevel"
-          value={difficultyLevel}
-          onChange={(e) => setDifficultyLevel(e.target.value as ExerciseLevel)}
+          defaultValue=""
         >
+          <option value="" disabled>
+            Select a difficulty
+          </option>
           {difficulties.map((difficulty) => (
             <option key={difficulty} value={difficulty}>
               {difficulty}
             </option>
           ))}
         </select>
+        {errors.difficultyLevel && (
+          <span style={{ color: "red" }}>Please select a language.</span>
+        )}
+
+        <button type="submit">Generate Exercises</button>
       </form>
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <ExerciseList exercises={exercises || []} language={language} />
+        <ExerciseList
+          exercises={exercises || []}
+          language={getValues("language")}
+        />
       )}
     </>
   );
