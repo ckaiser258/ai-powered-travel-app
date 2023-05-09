@@ -8,7 +8,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
-      <AppBar title="AI Travel App" />
+      <AppBar />
       <main>{children}</main>
     </>
   );

@@ -1,45 +1,31 @@
-import Link from "next/link";
-import styles from "@/styles/AppBar.module.css";
 import AuthButtons from "./users/AuthButtons";
+import { Box, AppBar as MuiAppBar, Toolbar } from "@mui/material";
+import Link from "./Link";
 
-interface AppBarProps {
-  title: string;
-}
-
-const AppBar: React.FC<AppBarProps> = ({ title }) => {
+const AppBar: React.FC = () => {
   return (
-    <header className={styles.appBar}>
-      <nav>
-        <ul className={styles.navList}>
-          <li>
-            <Link href="/" className={styles.link}>
-              <p>{title}</p>
-            </Link>
-          </li>
-          <li>
-            <Link href="/common-phrases" className={styles.link}>
-              <p>Common Phrases Generator</p>
-            </Link>
-          </li>
-          <li>
-            <Link href="/exercises" className={styles.link}>
-              <p>Language Exercise Generator</p>
-            </Link>
-          </li>
-          <li>
-            <Link href="/" className={styles.link}>
-              <p>Translator</p>
-            </Link>
-          </li>
-          <li>
-            <Link href="/chat-bot" className={styles.link}>
-              <p>Got other questions about travel? Ask our Chat Bot!</p>
-            </Link>
-          </li>
-          <AuthButtons />
-        </ul>
-      </nav>
-    </header>
+    <MuiAppBar position="static">
+      <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Box>
+          <Link href="/" color="inherit" underline="none">
+            Home
+          </Link>
+        </Box>
+        <Link href="/common-phrases" color="inherit" underline="none">
+          Common Phrases Generator
+        </Link>
+        <Link href="/exercises" color="inherit" underline="none">
+          Language Exercise Generator
+        </Link>
+        <Link href="/" color="inherit" underline="none">
+          Translator
+        </Link>
+        <Link href="/chat-bot" color="inherit" underline="none">
+          Got other questions about travel? Ask our Chat Bot!
+        </Link>
+        <AuthButtons />
+      </Toolbar>
+    </MuiAppBar>
   );
 };
 
