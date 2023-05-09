@@ -5,6 +5,8 @@ import { Session } from "next-auth";
 import { ApolloProvider } from "@apollo/client";
 import client from "@/lib/apollo-client";
 import Layout from "@/components/Layout";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { lightTheme } from "@/lib/theme";
 
 export default function App({
   Component,
@@ -15,9 +17,12 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <ApolloProvider client={client}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <ThemeProvider theme={lightTheme}>
+          <CssBaseline />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ThemeProvider>
       </ApolloProvider>
     </SessionProvider>
   );
