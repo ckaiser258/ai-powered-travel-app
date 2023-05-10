@@ -21,7 +21,6 @@ const TranslateForm: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     setLoading(true);
-    console.log(formData);
     try {
       const response = await fetch("/api/generateTranslation", {
         method: "POST",
@@ -49,13 +48,12 @@ const TranslateForm: React.FC = () => {
   };
 
   return (
-    <div>
+    <>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <h3>Translate:</h3>
-        <input
+        <Input
           {...register("textToTranslate", { required: true })}
           placeholder="Enter text to translate"
-          className={styles.input}
         />
         {errors.textToTranslate && (
           <span style={{ color: "red" }}>This field is required</span>
@@ -65,8 +63,12 @@ const TranslateForm: React.FC = () => {
         <Controller
           name="language"
           control={control}
+          rules={{ required: true }}
           render={({ field }) => <LanguageSelector {...field} />}
         />
+        {errors.language && (
+          <span style={{ color: "red" }}>This field is required</span>
+        )}
         <br />
         <br />
         <input
@@ -87,7 +89,7 @@ const TranslateForm: React.FC = () => {
           </>
         )}
       </div>
-    </div>
+    </>
   );
 };
 
