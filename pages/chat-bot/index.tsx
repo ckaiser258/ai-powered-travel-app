@@ -63,7 +63,9 @@ const ChatBotPage: NextPage = () => {
         )}
         <br />
         <br />
-        <input type="submit" value="Ask Chat Bot" className={styles.button} />
+        <Button variant="contained" type="submit" sx={{ marginBottom: 2 }}>
+          Ask Chat Bot
+        </Button>
       </form>
       <br />
       {loading && <div className={styles.loading}>Loading...</div>}
