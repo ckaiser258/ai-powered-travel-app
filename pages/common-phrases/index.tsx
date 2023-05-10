@@ -1,14 +1,22 @@
+import { Input } from "@mui/material";
 import { NextPage } from "next";
 import { useState } from "react";
+import ReactGoogleAutocomplete from "react-google-autocomplete";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 interface FormValues {
   location: string;
 }
 
+// Since the Google Maps API key needs to be exposed on the client side,
+// we need to use NEXT_PUBLIC_ prefix to make sure it's exposed.
+// Therefore it's important to limit its domain usage on the Google Cloud Console side of things.
+const GOOGLE_MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
 const CommonPhrasesPage: NextPage = () => {
   const {
     handleSubmit,
+    setValue,
     register,
     formState: { errors },
   } = useForm<FormValues>();
@@ -63,11 +71,24 @@ const CommonPhrasesPage: NextPage = () => {
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <h3>Phrases to know:</h3>
-        <input
+        <Input
+          placeholder="Enter Any Location"
+          fullWidth
           {...register("location", { required: true })}
-          type="text"
-          placeholder="Enter location"
+          inputComponent={({ inputRef, onFocus, onBlur, ...props }) => (
+            <ReactGoogleAutocomplete
+              apiKey={GOOGLE_MAPS_KEY}
+              options={{
+                types: ["(regions)"],
+              }}
+              onPlaceSelected={(selected) =>
+                setValue("location", selected.formatted_address)
+              }
+              {...props}
+            />
+          )}
         />
+
         {errors.location && (
           <span style={{ color: "red" }}>Please enter location.</span>
         )}
