@@ -10,7 +10,7 @@ const baseTheme: ThemeOptions = {
       main: "#cb997e",
     },
     error: {
-      main: "#6b705c",
+      main: "#9d0208",
     },
     warning: {
       main: "#b7b7a4",
