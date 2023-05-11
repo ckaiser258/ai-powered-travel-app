@@ -49,10 +49,15 @@ const RHFAutocompleteField = <
               onInputChange={(event, value) => onChange(value)}
               options={options}
               renderInput={(params) => (
-                <TextField {...params} label={label} inputRef={ref} />
+                <TextField
+                  {...params}
+                  label={label}
+                  inputRef={ref}
+                  error={!!error}
+                  helperText={error?.message}
+                />
               )}
             />
-            {error && <Typography color="red">{error.message}</Typography>}
           </>
         );
       }}

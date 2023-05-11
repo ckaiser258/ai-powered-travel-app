@@ -81,10 +81,9 @@ const TranslateForm: React.FC = () => {
             multiline
             rows={4}
             sx={{ width: 500 }}
+            error={!!errors.textToTranslate}
+            helperText={errors.textToTranslate && "This field is required"}
           />
-          {errors.textToTranslate && (
-            <Typography color="red">This field is required</Typography>
-          )}
           <Typography variant="h6">To:</Typography>
           <RHFAutocompleteField
             control={control}
