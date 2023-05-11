@@ -8,12 +8,10 @@ export default function Home() {
       <Head>
         <title>AI Travel Assistant</title>
       </Head>
-      <Typography variant="h2" align="center" mt={2}>
+      <Typography variant="h2" align="center" my={2}>
         AI Powered Travel Assistant
       </Typography>
-      <Box display="flex" justifyContent="center" alignItems="center">
-        <TranslateForm />
-      </Box>
+      <TranslateForm />
     </>
   );
 }

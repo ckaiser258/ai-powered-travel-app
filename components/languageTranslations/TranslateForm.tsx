@@ -1,9 +1,17 @@
 import { useState } from "react";
 import styles from "@/styles/styles.module.css";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { TextField } from "@mui/material";
+import {
+  TextField,
+  Typography,
+  Button,
+  Box,
+  Paper,
+  Stack,
+} from "@mui/material";
 import ISO6391 from "iso-639-1";
 import RHFAutocompleteField from "../RHFAutocompleteField";
+import TranslationResult from "./TranslationResult";
 
 interface FormValues {
   textToTranslate: string;
@@ -56,46 +64,48 @@ const TranslateForm: React.FC = () => {
   };
 
   return (
-    <>
+    <Box
+      textAlign="center"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        <h3>Translate:</h3>
-        <TextField
-          {...register("textToTranslate", { required: true })}
-          label="Enter text to translate"
-        />
-        {errors.textToTranslate && (
-          <span style={{ color: "red" }}>This field is required</span>
-        )}
-        <br />
-        <h3>To:</h3>
-        <RHFAutocompleteField
-          control={control}
-          name="language"
-          options={options}
-          label="Select a Language"
-          requiredMessage="Please select a language"
-        />
-        <br />
-        <br />
-        <input
-          type="submit"
-          value="Generate translation"
-          className={styles.button}
-        />
+        <Stack spacing={3} alignItems="center" mb={8}>
+          <Typography variant="h6">Translate:</Typography>
+          <TextField
+            {...register("textToTranslate", { required: true })}
+            label="Enter text to translate"
+            multiline
+            rows={4}
+            sx={{ width: 500 }}
+          />
+          {errors.textToTranslate && (
+            <Typography color="red">This field is required</Typography>
+          )}
+          <Typography variant="h6">To:</Typography>
+          <RHFAutocompleteField
+            control={control}
+            name="language"
+            options={options}
+            label="Select a Language"
+            requiredMessage="Please select a language"
+          />
+          <Button type="submit" variant="contained">
+            Generate Translation
+          </Button>
+        </Stack>
       </form>
-      <br />
-      <div className={loading || result ? styles.result : undefined}>
-        {loading && <div>Loading...</div>}
-        {result && (
-          <>
-            <h3>Original:</h3>
-            <p>{getValues("textToTranslate")}</p>
-            <h3>Translation:</h3>
-            <p>{result}</p>
-          </>
-        )}
-      </div>
-    </>
+      <Paper elevation={1} sx={{ padding: 2 }}>
+        <TranslationResult
+          loading={loading}
+          result={result}
+          textToTranslate={getValues("textToTranslate")}
+        />
+      </Paper>
+    </Box>
   );
 };
 
