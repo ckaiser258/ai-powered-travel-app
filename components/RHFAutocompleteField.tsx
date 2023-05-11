@@ -1,5 +1,5 @@
 import { Controller, Control, FieldValues, Path } from "react-hook-form";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, TextField, Typography } from "@mui/material";
 
 interface RHFAutocompleteFieldProps<
   O extends { label: string; value: string },
@@ -52,7 +52,7 @@ const RHFAutocompleteField = <
                 <TextField {...params} label={label} inputRef={ref} />
               )}
             />
-            {error && <span style={{ color: "red" }}>{error.message}</span>}
+            {error && <Typography color="red">{error.message}</Typography>}
           </>
         );
       }}
