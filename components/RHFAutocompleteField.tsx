@@ -41,7 +41,7 @@ const RHFAutocompleteField = <
               }
               onChange={(event, newValue) => {
                 if (typeof newValue !== "string") {
-                  onChange(newValue.value);
+                  onChange(newValue?.value);
                 } else {
                   onChange(newValue);
                 }
