@@ -1,12 +1,20 @@
-import { LanguageSelector } from "@/components/languageTranslations/LanguageSelector";
 import { useState } from "react";
 import styles from "@/styles/styles.module.css";
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { TextField } from "@mui/material";
+import ISO6391 from "iso-639-1";
+import RHFAutocompleteField from "../RHFAutocompleteField";
 
 interface FormValues {
   textToTranslate: string;
-  language: { label: string; value: string };
+  language: string;
 }
+
+const options = ISO6391.getAllNames().map((language) => ({
+  label: language,
+  value: language,
+}));
+
 const TranslateForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
@@ -17,7 +25,7 @@ const TranslateForm: React.FC = () => {
     control,
     formState: { errors },
     getValues,
-  } = useForm();
+  } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     setLoading(true);
@@ -29,7 +37,7 @@ const TranslateForm: React.FC = () => {
         },
         body: JSON.stringify({
           input: formData.textToTranslate,
-          language: formData.language.value,
+          language: formData.language,
         }),
       });
       const data = await response.json();
@@ -51,24 +59,22 @@ const TranslateForm: React.FC = () => {
     <>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <h3>Translate:</h3>
-        <Input
+        <TextField
           {...register("textToTranslate", { required: true })}
-          placeholder="Enter text to translate"
+          label="Enter text to translate"
         />
         {errors.textToTranslate && (
           <span style={{ color: "red" }}>This field is required</span>
         )}
         <br />
         <h3>To:</h3>
-        <Controller
-          name="language"
+        <RHFAutocompleteField
           control={control}
-          rules={{ required: true }}
-          render={({ field }) => <LanguageSelector {...field} />}
+          name="language"
+          options={options}
+          label="Select a Language"
+          requiredMessage="Please select a language"
         />
-        {errors.language && (
-          <span style={{ color: "red" }}>This field is required</span>
-        )}
         <br />
         <br />
         <input
