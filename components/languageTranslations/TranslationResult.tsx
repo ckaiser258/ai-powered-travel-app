@@ -12,13 +12,7 @@ const TranslationResult: React.FC<TranslationResultProps> = ({
   loading,
 }) => {
   return (
-    <Stack
-      spacing={1}
-      sx={{
-        maxWidth: 500,
-        minWidth: 300,
-      }}
-    >
+    <Stack spacing={1} maxWidth={500} minWidth={300} textAlign="center">
       <Typography variant="h5">Original:</Typography>
       <Typography variant="body1">{textToTranslate}</Typography>
       <br />
@@ -26,8 +20,8 @@ const TranslationResult: React.FC<TranslationResultProps> = ({
       <Typography variant="body1">
         {loading ? (
           <>
-            <Skeleton sx={{ width: 300 }} animation="wave" />
-            <Skeleton sx={{ width: 200 }} animation="wave" />
+            <Skeleton width={300} animation="wave" />
+            <Skeleton width={200} animation="wave" />
           </>
         ) : (
           result

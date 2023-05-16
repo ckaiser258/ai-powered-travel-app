@@ -64,16 +64,12 @@ const TranslateForm: React.FC = () => {
   };
 
   return (
-    <Box
-      textAlign="center"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
+    <>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <Stack spacing={3} alignItems="center" mb={8}>
+          <Typography variant="h3" mb={4}>
+            Translation Generator
+          </Typography>
           <Typography variant="h6">Translate:</Typography>
           <TextField
             {...register("textToTranslate", { required: true })}
@@ -104,7 +100,7 @@ const TranslateForm: React.FC = () => {
           textToTranslate={getValues("textToTranslate")}
         />
       </Paper>
-    </Box>
+    </>
   );
 };
 
