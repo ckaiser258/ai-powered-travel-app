@@ -10,6 +10,7 @@ interface RHFAutocompleteFieldProps<
   options: O[];
   label: string;
   requiredMessage?: string;
+  freeSolo?: boolean;
 }
 
 // A reusable component that wraps the Material UI Autocomplete
@@ -20,7 +21,7 @@ const RHFAutocompleteField = <
 >(
   props: RHFAutocompleteFieldProps<O, TField>
 ) => {
-  const { control, name, options, label, requiredMessage } = props;
+  const { control, name, options, label, requiredMessage, freeSolo } = props;
   return (
     <Controller
       name={name}
@@ -32,7 +33,7 @@ const RHFAutocompleteField = <
           <>
             <Autocomplete
               sx={{ width: 300 }}
-              freeSolo
+              freeSolo={freeSolo}
               autoHighlight
               value={
                 value
@@ -46,7 +47,12 @@ const RHFAutocompleteField = <
                   onChange(newValue);
                 }
               }}
-              onInputChange={(event, value) => onChange(value)}
+              // If freeSolo is false, then that means the user MUST select an option from the list.
+              // In that case, we don't want to change the value of the field while the user is typing
+              // because that would mean that the value of the field could: a) Be invalid, and/or b) Cause unexpected behavior.
+              onInputChange={
+                freeSolo ? (event, value) => onChange(value) : null
+              }
               options={options}
               renderInput={(params) => (
                 <TextField
