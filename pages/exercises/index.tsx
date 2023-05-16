@@ -38,6 +38,12 @@ const ExercisesPage: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>
+          AI Powered Travel Assistant |{" "}
+          {getValues("language") ? getValues("language") : "Language"} Exercises
+        </title>
+      </Head>
       <h1>Exercises</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="language">Language:</label>
