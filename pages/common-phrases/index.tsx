@@ -4,6 +4,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Paper,
   Skeleton,
   Stack,
   TextField,
@@ -48,18 +49,20 @@ const SkeletonList = () => {
   }
 
   return (
-    <List
-      dense
+    <Paper
       sx={{
-        marginTop: 5,
+        mt: 5,
+        bgcolor: "primary.light",
       }}
     >
-      {skeletonArray.map((skeleton, index) => (
-        <ListItem key={index}>
-          <ListItemText primary={skeleton} />
-        </ListItem>
-      ))}
-    </List>
+      <List dense>
+        {skeletonArray.map((skeleton, index) => (
+          <ListItem key={index}>
+            <ListItemText primary={skeleton} />
+          </ListItem>
+        ))}
+      </List>
+    </Paper>
   );
 };
 
@@ -109,19 +112,27 @@ const CommonPhrasesPage: NextPage = () => {
 
     const bulletPoints = result.split("\n");
     return (
-      <List
+      <Paper
         sx={{
-          marginTop: 5,
+          mt: 5,
+          bgcolor: "primary.light",
         }}
       >
-        {bulletPoints.map((bulletPoint, index) =>
-          bulletPoint ? (
-            <ListItem key={index}>
-              <ListItemText primary={bulletPoint} />
-            </ListItem>
-          ) : null
-        )}
-      </List>
+        <List>
+          {bulletPoints.map((bulletPoint, index) =>
+            bulletPoint ? (
+              <ListItem
+                sx={{
+                  textAlign: "center",
+                }}
+                key={index}
+              >
+                <ListItemText primary={bulletPoint} />
+              </ListItem>
+            ) : null
+          )}
+        </List>
+      </Paper>
     );
   }
 
