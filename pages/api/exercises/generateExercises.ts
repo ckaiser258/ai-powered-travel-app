@@ -14,7 +14,7 @@ const generateExercises = async (req: NextApiRequest, res: NextApiResponse) => {
       messages: [
         {
           role: "system",
-          content: `You are ChatGPT, a large language model trained by OpenAI. You are an expert in all languages. Generate a list of ${language} phrases that you would consider ${difficultyLevel} level. Respond using markdown. The user is going to guess what they mean. Do not say anything else.`,
+          content: `You are ChatGPT, a large language model trained by OpenAI. You are an expert in all languages. Generate a list of 10 ${language} phrases that you would consider ${difficultyLevel} level. Respond using markdown. The user is going to guess what they mean. Do not say anything else.`,
         },
       ],
       temperature: 0.1,
