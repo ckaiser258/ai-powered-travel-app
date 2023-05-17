@@ -1,10 +1,23 @@
+import RHFAutocompleteField from "@/components/RHFAutocompleteField";
 import ExerciseList from "@/components/exercises/ExerciseList";
 import getExercises from "@/db/exercise/queries/getExercises";
 import { ExerciseLevel } from "@/generated/graphql";
+import {
+  Grid,
+  Typography,
+  Select,
+  MenuItem,
+  FormHelperText,
+  FormControl,
+  InputLabel,
+  Button,
+  Box,
+} from "@mui/material";
 import { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
 import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 interface FormValues {
   difficultyLevel: ExerciseLevel;
@@ -17,13 +30,26 @@ const difficulties: ExerciseLevel[] = [
   ExerciseLevel.Advanced,
 ];
 
+// TODO: Replace these with the user's saved languages
+const languageOptions = [
+  { label: "English", value: "en" },
+  { label: "Spanish", value: "es" },
+  { label: "French", value: "fr" },
+  { label: "German", value: "de" },
+  { label: "Italian", value: "it" },
+  { label: "Portuguese", value: "pt" },
+  { label: "Russian", value: "ru" },
+  { label: "Japanese", value: "ja" },
+  { label: "Chinese", value: "zh" },
+];
+
 const ExercisesPage: NextPage = () => {
   const [loading, setLoading] = useState(false);
   const [exercises, setExercises] = useState<string[]>([]);
   const { data: session } = useSession();
   const {
     handleSubmit,
-    register,
+    control,
     formState: { errors },
     getValues,
   } = useForm<FormValues>();
@@ -39,66 +65,95 @@ const ExercisesPage: NextPage = () => {
   return (
     <>
       <Head>
-        <title>
-          AI Powered Travel Assistant |{" "}
-          {getValues("language") ? getValues("language") : "Language"} Exercises
-        </title>
+        <title>AI Powered Travel Assistant | Language Learning Exercises</title>
       </Head>
-      <h1>Exercises</h1>
+      <Typography variant="h3" mb={3}>
+        Language Exercises
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="language">Language:</label>
-        <select
-          {...register("language", { required: true })}
-          id="language"
-          defaultValue=""
+        <Grid
+          container
+          spacing={2}
+          display="flex"
+          justifyContent="center"
+          mb={2}
         >
-          <option value="" disabled>
-            Select a language
-          </option>
-          {/* Replace these with the user's saved languages */}
-          <option value="en">English</option>
-          <option value="es">Spanish</option>
-          <option value="fr">French</option>
-          <option value="de">German</option>
-          <option value="it">Italian</option>
-          <option value="pt">Portuguese</option>
-          <option value="ru">Russian</option>
-          <option value="ja">Japanese</option>
-          <option value="zh">Chinese</option>
-        </select>
-        {errors.language && (
-          <span style={{ color: "red" }}>Please select a language.</span>
-        )}
-
-        <label htmlFor="difficulty">Difficulty:</label>
-        <select
-          {...register("difficultyLevel", { required: true })}
-          id="difficultyLevel"
-          defaultValue=""
-        >
-          <option value="" disabled>
-            Select a difficulty
-          </option>
-          {difficulties.map((difficulty) => (
-            <option key={difficulty} value={difficulty}>
-              {difficulty}
-            </option>
-          ))}
-        </select>
-        {errors.difficultyLevel && (
-          <span style={{ color: "red" }}>Please select a language.</span>
-        )}
-
-        <input type="submit" value="Generate Exercises" />
+          <Grid item xs={12} sm={4} display="flex" justifyContent="center">
+            <RHFAutocompleteField
+              control={control}
+              name="language"
+              options={languageOptions}
+              label="Select a Language"
+              requiredMessage="Please select a language"
+            />
+          </Grid>
+          <Grid item xs={12} sm={4} display="flex" justifyContent="center">
+            <Controller
+              name="difficultyLevel"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <FormControl
+                  sx={{ width: 300 }}
+                  error={!!errors.difficultyLevel}
+                >
+                  <InputLabel id="difficulty-level-label">
+                    Difficulty Level
+                  </InputLabel>
+                  <Select
+                    {...field}
+                    error={!!errors.difficultyLevel}
+                    label="Difficulty Level"
+                    labelId="difficulty-level-label"
+                    value={field.value ? field.value : ""}
+                  >
+                    {difficulties.map((difficulty, i) => (
+                      <MenuItem key={i} value={difficulty}>
+                        {difficulty}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.difficultyLevel && (
+                    <FormHelperText>
+                      Please select a difficulty level.
+                    </FormHelperText>
+                  )}
+                </FormControl>
+              )}
+            />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={3}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Button type="submit" variant="contained">
+              Generate Exercises
+            </Button>
+          </Grid>
+        </Grid>
       </form>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <ExerciseList
-          exercises={exercises || []}
-          language={getValues("language")}
-        />
+      {!exercises.length && !loading && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="50vh"
+        >
+          <Typography variant="h5" textAlign="center">
+            No exercises to display. Please select a language and difficulty
+            level and click &quot;Generate Exercises&quot;.
+          </Typography>
+        </Box>
       )}
+      <ExerciseList
+        loading={loading}
+        exercises={exercises}
+        language={getValues("language")}
+      />
     </>
   );
 };
