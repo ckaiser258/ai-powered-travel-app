@@ -67,7 +67,13 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
   loading,
 }) => {
   return (
-    <Grid container flexDirection="row" justifyContent="center" spacing={2}>
+    <Grid
+      container
+      flexDirection="row"
+      justifyContent="center"
+      spacing={2}
+      mb={2}
+    >
       {loading ? (
         <SkeletonExerciseList />
       ) : (
