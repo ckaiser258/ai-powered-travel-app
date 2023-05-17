@@ -65,7 +65,7 @@ const TranslateForm: React.FC = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} alignItems="center" mb={8}>
           <Typography variant="h3" mb={4}>
             Translation Generator
@@ -87,13 +87,14 @@ const TranslateForm: React.FC = () => {
             options={options}
             label="Select a Language"
             requiredMessage="Please select a language"
+            freeSolo
           />
           <Button type="submit" variant="contained">
             Generate Translation
           </Button>
         </Stack>
       </form>
-      <Paper elevation={1} sx={{ padding: 2 }}>
+      <Paper elevation={1} sx={{ p: 2 }}>
         <TranslationResult
           loading={loading}
           result={result}
