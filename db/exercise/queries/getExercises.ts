@@ -8,7 +8,10 @@ const getExercises = async (difficultyLevel: string, language: string) => {
       body: JSON.stringify({ difficultyLevel, language }),
     });
 
-    const data = await response.json();
+    const data: {
+      exercises: string;
+      error?: { message: string };
+    } = await response.json();
     if (response.status !== 200) {
       throw (
         data.error || new Error(`Request failed with status ${response.status}`)
@@ -18,7 +21,8 @@ const getExercises = async (difficultyLevel: string, language: string) => {
     // This code splits the string into an array of exercises and removes the numbers.
     const lines = data.exercises.split("\n");
     const formattedExercises = lines.map((line) => line.replace(/^\d+\. /, ""));
-    return formattedExercises;
+    // Filter out any empty strings resulting from stray newlines
+    return formattedExercises.filter((exercise) => exercise !== "");
   } catch (error) {
     console.error(error);
     alert(error.message);
