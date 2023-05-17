@@ -76,7 +76,7 @@ const ExercisesPage: NextPage = () => {
           spacing={2}
           display="flex"
           justifyContent="center"
-          mb={2}
+          mb={(exercises.length || loading) && 4}
         >
           <Grid item xs={12} sm={4} display="flex" justifyContent="center">
             <RHFAutocompleteField
