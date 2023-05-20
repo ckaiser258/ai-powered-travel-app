@@ -67,7 +67,7 @@ const TranslateForm: React.FC = () => {
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} alignItems="center" mb={8}>
-          <Typography variant="h3" mb={4}>
+          <Typography variant="h3" mb={4} textAlign="center">
             Translation Generator
           </Typography>
           <Typography variant="h6">Translate:</Typography>
@@ -76,7 +76,12 @@ const TranslateForm: React.FC = () => {
             label="Enter text to translate"
             multiline
             rows={4}
-            sx={{ width: 500 }}
+            sx={{
+              width: {
+                xs: "80%",
+                sm: 500,
+              },
+            }}
             error={!!errors.textToTranslate}
             helperText={errors.textToTranslate && "This field is required"}
           />
@@ -94,7 +99,16 @@ const TranslateForm: React.FC = () => {
           </Button>
         </Stack>
       </form>
-      <Paper elevation={1} sx={{ p: 2 }}>
+      <Paper
+        elevation={1}
+        sx={{
+          p: 2,
+          mb: {
+            xs: 6,
+            sm: 0,
+          },
+        }}
+      >
         <TranslationResult
           loading={loading}
           result={result}
