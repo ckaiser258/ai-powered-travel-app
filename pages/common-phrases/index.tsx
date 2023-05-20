@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  InputBaseComponentProps,
   List,
   ListItem,
   ListItemText,
@@ -43,7 +44,15 @@ const SkeletonList = () => {
           animation="wave"
           sx={{ mr: 1 }}
         />
-        <Skeleton width={500} animation="wave" />
+        <Skeleton
+          sx={{
+            width: {
+              xs: 275,
+              sm: 700,
+            },
+          }}
+          animation="wave"
+        />
       </Box>
     );
   }
@@ -51,7 +60,7 @@ const SkeletonList = () => {
   return (
     <Paper
       sx={{
-        mt: 5,
+        m: 4,
         bgcolor: "primary.light",
       }}
     >
@@ -65,6 +74,26 @@ const SkeletonList = () => {
     </Paper>
   );
 };
+
+// This seems to be required to prevent a bug after a form error occurs.
+const GoogleAutocompleteComponent: React.FC<InputBaseComponentProps> = ({
+  setValue,
+  inputRef,
+  onFocus,
+  onBlur,
+  ...props
+}) => (
+  <ReactGoogleAutocomplete
+    apiKey={GOOGLE_MAPS_KEY}
+    options={{
+      types: ["(regions)"],
+    }}
+    onPlaceSelected={(selected) =>
+      setValue("location", selected.formatted_address)
+    }
+    {...props}
+  />
+);
 
 const CommonPhrasesPage: NextPage = () => {
   const {
@@ -114,7 +143,7 @@ const CommonPhrasesPage: NextPage = () => {
     return (
       <Paper
         sx={{
-          mt: 5,
+          m: 4,
           bgcolor: "primary.light",
         }}
       >
@@ -142,29 +171,33 @@ const CommonPhrasesPage: NextPage = () => {
         <title>AI Powered Travel Assistant | Common Phrases Generator</title>
       </Head>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack spacing={4} maxWidth={500} minWidth={300} alignItems="center">
+        <Stack
+          spacing={4}
+          maxWidth={500}
+          minWidth={300}
+          alignItems="center"
+          textAlign="center"
+        >
           <Typography variant="h3">Common Phrases</Typography>
           <Typography variant="h5">Enter a Location</Typography>
           <TextField
             label="Location"
-            fullWidth
             variant="standard"
             error={!!errors.location}
             helperText="Enter any location in the world..."
             {...register("location", { required: true })}
             InputProps={{
-              inputComponent: ({ inputRef, onFocus, onBlur, ...props }) => (
-                <ReactGoogleAutocomplete
-                  apiKey={GOOGLE_MAPS_KEY}
-                  options={{
-                    types: ["(regions)"],
-                  }}
-                  onPlaceSelected={(selected) =>
-                    setValue("location", selected.formatted_address)
-                  }
-                  {...props}
-                />
-              ),
+              inputComponent: GoogleAutocompleteComponent,
+            }}
+            // Any added custom props for the GoogleAutocompleteComponent
+            inputProps={{
+              setValue,
+            }}
+            sx={{
+              width: {
+                xs: "85%",
+                sm: "100%",
+              },
             }}
           />
           <Button type="submit" variant="contained">
