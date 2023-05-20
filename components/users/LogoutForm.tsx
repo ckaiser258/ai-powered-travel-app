@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { signOut } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
@@ -9,7 +10,15 @@ const LogoutForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input type="submit" value="Sign out" />
+      <Button
+        type="submit"
+        color="secondary"
+        variant="contained"
+        size="small"
+        onClick={() => signOut()}
+      >
+        Sign out
+      </Button>
     </form>
   );
 };

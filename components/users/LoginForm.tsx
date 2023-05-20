@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 
@@ -9,7 +10,14 @@ const LoginForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input type="submit" value="Sign in" />
+      <Button
+        type="submit"
+        variant="contained"
+        color="secondary"
+        onClick={() => signIn("github")}
+      >
+        Sign in with GitHub
+      </Button>
     </form>
   );
 };

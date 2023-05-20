@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import LoginForm from "./LoginForm";
 import LogoutForm from "./LogoutForm";
+import { Box, Typography } from "@mui/material";
 
 const AuthButtons = () => {
   const { data: session, status } = useSession();
@@ -11,10 +12,23 @@ const AuthButtons = () => {
   }, []);
 
   return status === "authenticated" ? (
-    <>
-      Signed in as {session?.user?.name}
-      <LogoutForm />
-    </>
+    <Box display="inline-flex">
+      <Typography
+        variant="body1"
+        sx={{
+          display: {
+            xs: "none",
+            xl: "inline-flex",
+          },
+          alignItems: "center",
+        }}
+      >
+        Hello, {session?.user?.name}
+      </Typography>
+      <Box ml={{ xl: 2 }}>
+        <LogoutForm />
+      </Box>
+    </Box>
   ) : (
     <LoginForm />
   );
