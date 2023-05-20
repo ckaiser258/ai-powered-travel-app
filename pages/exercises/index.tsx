@@ -67,7 +67,7 @@ const ExercisesPage: NextPage = () => {
       <Head>
         <title>AI Powered Travel Assistant | Language Learning Exercises</title>
       </Head>
-      <Typography variant="h3" mb={3}>
+      <Typography variant="h3" mb={3} textAlign="center">
         Language Exercises
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
