@@ -10,22 +10,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <main>
       <AppBar />
-      <Typography variant="h2" align="center" my={4}>
-        AI Powered Travel Assistant
-      </Typography>
-      <Divider
-        sx={{
-          margin: "auto",
-          width: "60%",
-          marginTop: -2,
-          marginBottom: 4,
-        }}
-      />
-      <Stack
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-      >
+      <Stack display="flex" justifyContent="center" alignItems="center" mt={4}>
+        <Typography variant="h2" align="center" mb={4}>
+          AI Powered Travel Assistant
+        </Typography>
+        <Divider
+          sx={{
+            m: "auto",
+            width: "60%",
+            mt: -2,
+            mb: 5,
+          }}
+        />
         {children}
       </Stack>
     </main>
