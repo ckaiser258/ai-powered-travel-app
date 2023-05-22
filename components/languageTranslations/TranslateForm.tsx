@@ -1,14 +1,6 @@
 import { useState } from "react";
-import styles from "@/styles/styles.module.css";
 import { useForm, SubmitHandler } from "react-hook-form";
-import {
-  TextField,
-  Typography,
-  Button,
-  Box,
-  Paper,
-  Stack,
-} from "@mui/material";
+import { TextField, Typography, Button, Paper, Stack } from "@mui/material";
 import ISO6391 from "iso-639-1";
 import RHFAutocompleteField from "../RHFAutocompleteField";
 import TranslationResult from "./TranslationResult";
