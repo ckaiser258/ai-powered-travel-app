@@ -23,7 +23,7 @@ const navLinks = [
   { title: `Language Exercise Generator`, path: `/exercises` },
   { title: `Translator`, path: `/` },
   {
-    title: `Got other questions about travel? Ask our Chat Bot!`,
+    title: `Chat Bot 🤖`,
     path: `/chat-bot`,
   },
 ];
@@ -79,14 +79,14 @@ const AppBar: React.FC = () => {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { xl: "none" } }}
+            sx={{ mr: 2, display: { lg: "none" } }}
           >
             <Menu />
           </IconButton>
           <Typography variant="h6" component="div" flexGrow={1}>
             AI Powered Travel Assistant
           </Typography>
-          <Box display={{ xs: "none", xl: "block" }}>
+          <Box display={{ xs: "none", lg: "block" }}>
             {navLinks.map(({ title, path }, i) => (
               <Link
                 underline="none"
@@ -112,7 +112,7 @@ const AppBar: React.FC = () => {
             keepMounted: true, // Better open performance on mobile.
           }}
           sx={{
-            display: { xs: "block", xl: "none" },
+            display: { xs: "block", lg: "none" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
