@@ -37,7 +37,7 @@ const AppBar: React.FC = () => {
 
   const drawer = (
     <Box onClick={handleDrawerToggle} textAlign="center">
-      <Typography variant="h6" sx={{ my: 2 }}>
+      <Typography variant="h6" sx={{ m: 2 }}>
         AI Powered Travel Assistant
       </Typography>
       <Divider variant="middle" />

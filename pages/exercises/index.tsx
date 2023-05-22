@@ -2,6 +2,7 @@ import RHFAutocompleteField from "@/components/RHFAutocompleteField";
 import ExerciseList from "@/components/exercises/ExerciseList";
 import getExercises from "@/db/exercise/queries/getExercises";
 import { ExerciseLevel } from "@/generated/graphql";
+import { gql, useQuery } from "@apollo/client";
 import {
   Grid,
   Typography,
@@ -18,6 +19,29 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+
+const GENERATE_RANDOM_EXERCISES = gql`
+  query generateRandomExercises(
+    $difficultyLevel: ExerciseLevel!
+    $userId: ID!
+    $language: String!
+  ) {
+    generateRandomExercises(
+      difficultyLevel: $difficultyLevel
+      userId: $userId
+      language: $language
+    ) {
+      id
+      targetPhrase
+      blank
+      correctAnswer
+      completions {
+        id
+        userId
+      }
+    }
+  }
+`;
 
 interface FormValues {
   difficultyLevel: ExerciseLevel;
@@ -53,6 +77,10 @@ const ExercisesPage: NextPage = () => {
     formState: { errors },
     getValues,
   } = useForm<FormValues>();
+
+  // const { data } = useQuery<Query>(GENERATE_RANDOM_EXERCISES, {
+  //   variables: { difficultyLevel, userId: session?.userId, language },
+  // });
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     setLoading(true);
@@ -141,7 +169,10 @@ const ExercisesPage: NextPage = () => {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          minHeight="50vh"
+          minHeight={{
+            xs: "35vh",
+            sm: "50vh",
+          }}
         >
           <Typography variant="h5" textAlign="center">
             No exercises to display. Please select a language and difficulty

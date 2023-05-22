@@ -67,7 +67,7 @@ const TranslateForm: React.FC = () => {
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} alignItems="center" mb={8}>
-          <Typography variant="h3" mb={4} textAlign="center">
+          <Typography variant="h3" textAlign="center">
             Translation Generator
           </Typography>
           <Typography variant="h6">Translate:</Typography>
@@ -76,12 +76,7 @@ const TranslateForm: React.FC = () => {
             label="Enter text to translate"
             multiline
             rows={4}
-            sx={{
-              width: {
-                xs: "80%",
-                sm: 500,
-              },
-            }}
+            fullWidth
             error={!!errors.textToTranslate}
             helperText={errors.textToTranslate && "This field is required"}
           />
