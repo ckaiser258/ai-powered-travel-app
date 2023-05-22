@@ -1,6 +1,7 @@
 import checkAnswer from "@/db/exercise/queries/checkAnswer";
+import { Button, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 interface ExerciseFormProps {
   language: string;
@@ -13,8 +14,8 @@ interface FormValues {
 
 const ExerciseForm: React.FC<ExerciseFormProps> = ({ language, phrase }) => {
   const {
-    register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<FormValues>();
   const [isCorrectAnswer, setIsCorrectAnswer] = useState<boolean | null>(null);
@@ -37,14 +38,32 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ language, phrase }) => {
 
   return isCorrectAnswer === null ? (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input
-        {...register("textToTranslate", { required: true })}
-        placeholder="Enter your answer"
-      />
-      {errors.textToTranslate && (
-        <span style={{ color: "red" }}>This field is required</span>
-      )}
-      <input type="submit" value="Check" />
+      <Stack spacing={1} direction="row">
+        <Controller
+          name="textToTranslate"
+          control={control}
+          rules={{ required: true }}
+          render={({ field }) => (
+            <TextField
+              autoComplete="off"
+              error={!!errors.textToTranslate}
+              helperText={errors.textToTranslate && "Please enter your answer"}
+              size="small"
+              label="Enter your answer"
+              {...field}
+            />
+          )}
+        />
+        <Button
+          type="submit"
+          variant="outlined"
+          size="small"
+          color="secondary"
+          disableRipple
+        >
+          Check
+        </Button>
+      </Stack>
     </form>
   ) : (
     <p>{isCorrectAnswer ? "Correct!" : "Incorrect!"}</p>

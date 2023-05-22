@@ -91,6 +91,10 @@ const ExerciseList: React.FC<ExerciseListProps> = ({
               sx={{
                 width: 300,
                 height: 200,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-evenly",
               }}
             >
               <CardContent>
