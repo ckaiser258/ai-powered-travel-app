@@ -15,6 +15,7 @@ const AuthButtons = () => {
     <Box display="inline-flex">
       <Typography
         variant="body1"
+        fontWeight="bold"
         sx={{
           display: {
             xs: "none",
@@ -23,9 +24,10 @@ const AuthButtons = () => {
           alignItems: "center",
         }}
       >
-        Hello, {session?.user?.name}
+        {/* Temporary hack to get the user's first name. As this isn't currently an option within the user object. */}
+        Hello, {session?.user?.name.split(" ")[0]}
       </Typography>
-      <Box ml={{ xl: 2 }}>
+      <Box ml={{ lg: 2 }}>
         <LogoutForm />
       </Box>
     </Box>
