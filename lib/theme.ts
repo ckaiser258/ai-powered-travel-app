@@ -4,6 +4,9 @@ import {
   responsiveFontSizes,
 } from "@mui/material/styles";
 
+// https://mui.com/material-ui/about-the-lab/
+import type {} from "@mui/lab/themeAugmentation";
+
 const baseTheme: ThemeOptions = {
   palette: {
     mode: "light",
