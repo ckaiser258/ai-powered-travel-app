@@ -1,48 +1,33 @@
-import openAiConfig from "@/lib/openAiConfig";
-import { NextApiRequest, NextApiResponse } from "next";
-import { OpenAIApi } from "openai";
+import openAiConfig from "@/lib/OpenAI/openAiConfig";
+import { OpenAIStream } from "@/lib/OpenAI/openAiStream";
 
-const openai = new OpenAIApi(openAiConfig);
-
-interface Data {
-  result?: string;
-  error?: {
-    message: string;
-  };
-}
+export const config = {
+  runtime: "edge",
+};
 
 /* eslint import/no-anonymous-default-export: [2, {"allowAnonymousFunction": true}] */
-export default async function (
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
+export default async function POST(req: Request): Promise<Response> {
   if (!openAiConfig.apiKey) {
-    res.status(500).json({
-      error: {
-        message: "OpenAI API key not configured",
-      },
-    });
-    return;
+    return new Response("No OpenAI API key found", { status: 500 });
   }
 
-  const prompt = req.body.prompt;
-  if (prompt.trim().length === 0) {
-    res.status(400).json({
-      error: {
-        message: "Please enter a valid prompt",
-      },
-    });
-    return;
+  const { prompt } = (await req.json()) as {
+    prompt?: string;
+  };
+
+  if (!prompt || !prompt.trim().length) {
+    return new Response("No prompt in the request", { status: 400 });
   }
 
   try {
-    const completion = await openai.createChatCompletion({
+    const stream = await OpenAIStream({
       model: "gpt-3.5-turbo",
+      stream: true,
       messages: [
         {
           role: "system",
           content:
-            "You are ChatGPT, a large language model trained by OpenAI. You are a travel expert. The user is going to ask you a question about traveling to a location. Answer the question as concisely as possible. If the question is not about travel, let the user know that you can't answer anything not related to travel.",
+            "You are ChatGPT, a large language model trained by OpenAI. You are a travel expert. The user is going to ask you a question about traveling to a location. Answer concisely. If the question is not about travel, let the user know that you can't answer anything not related to travel.",
         },
         {
           role: "user",
@@ -53,20 +38,18 @@ export default async function (
       frequency_penalty: 1.0,
       presence_penalty: 1.0,
     });
-    res
-      .status(200)
-      .json({ result: completion.data.choices[0].message.content });
+    return new Response(stream);
   } catch (error) {
-    // Consider adjusting the error handling logic for your use case
+    console.error(error);
     if (error.response) {
       console.error(error.response.status, error.response.data);
-      res.status(error.response.status).json(error.response.data);
+      return new Response(error.response.data, {
+        status: error.response.status,
+      });
     } else {
       console.error(`Error with OpenAI API request: ${error.message}`);
-      res.status(500).json({
-        error: {
-          message: "An error occurred during your request.",
-        },
+      return new Response("An error occurred during your request.", {
+        status: 500,
       });
     }
   }
