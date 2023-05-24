@@ -11,6 +11,7 @@ export async function OpenAIStream(payload: CreateChatCompletionRequest) {
 
   let counter = 0;
 
+  // The OpenAI npm package doesn't currently seem to want to work nicely with streams, so using fetch directly here
   const res = await fetch("https://api.openai.com/v1/chat/completions", {
     headers: {
       "Content-Type": "application/json",
