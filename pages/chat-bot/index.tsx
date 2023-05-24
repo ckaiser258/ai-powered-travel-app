@@ -1,7 +1,10 @@
 import { NextPage } from "next";
 import { useState } from "react";
-import styles from "@/styles/styles.module.css";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { Button, Paper, Stack, TextField, Typography } from "@mui/material";
+import Head from "next/head";
+import { LoadingButton } from "@mui/lab";
+import { Send } from "@mui/icons-material";
 
 interface FormValues {
   prompt: string;
@@ -10,34 +13,49 @@ interface FormValues {
 const ChatBotPage: NextPage = () => {
   const {
     handleSubmit,
-    register,
+    control,
     formState: { errors },
   } = useForm<FormValues>();
   const [result, setResult] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
-    // Make sure the previous result is cleared when loading a new one.
+    const { prompt } = formData;
     setResult("");
     setLoading(true);
+
     try {
       const response = await fetch("/api/chatBot", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ prompt }),
         body: JSON.stringify({ prompt: formData.prompt }),
       });
 
-      const data = await response.json();
-      if (response.status !== 200) {
-        throw (
-          data.error ||
-          new Error(`Request failed with status ${response.status}`)
-        );
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      // This data is a ReadableStream
+      const data = response.body;
+      if (!data) {
+        return;
       }
 
-      setResult(data.result);
+      // Set up a reader to stream the response body, similar to ChatGPT.
+      const reader = data.getReader();
+      // // Set up a decoder to decode the binary data from the reader into a string.
+      const decoder = new TextDecoder();
+
+      let done = false;
+
+      while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        const chunkValue = decoder.decode(value);
+        setResult((prev) => prev + chunkValue);
+      }
     } catch (error) {
       console.error(error);
       alert(error.message);
@@ -46,36 +64,66 @@ const ChatBotPage: NextPage = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        <h3 className={styles.title}>
-          Ask Our AI Travel Chat Bot Any Travel Question
-        </h3>
-        <textarea
-          {...register("prompt", { required: true })}
-          rows={5}
-          cols={50}
-          placeholder="Enter question"
-          className={styles.textarea}
-        />
-        {errors.prompt && (
-          <span style={{ color: "red" }}>Please enter a question.</span>
-        )}
-        <br />
-        <br />
-        <Button variant="contained" type="submit" sx={{ marginBottom: 2 }}>
-          Ask Chat Bot
-        </Button>
+    <>
+      <Head>
+        <title>AI Powered Travel Assistant | Chat Bot</title>
+      </Head>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack spacing={3} alignItems="center">
+          <Typography variant="h4" textAlign="center">
+            Ask Our AI Travel Chat Bot Any Travel Question
+          </Typography>
+          <Controller
+            name="prompt"
+            control={control}
+            rules={{ required: "Please enter a question" }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                sx={{
+                  width: "90%",
+                }}
+                multiline
+                rows={5}
+                label="Enter question"
+                error={!!errors.prompt}
+                helperText={errors.prompt?.message}
+              />
+            )}
+          />
+          <LoadingButton
+            type="submit"
+            endIcon={<Send />}
+            loading={loading}
+            loadingPosition="end"
+            variant="contained"
+          >
+            {/* Wrapping the contents of this loading button in a span prevents a known current bug in MUI:
+          https://mui.com/material-ui/react-button/#loading-button */}
+            <span>Ask Chat Bot</span>
+          </LoadingButton>
+        </Stack>
       </form>
-      <br />
-      {loading && <div className={styles.loading}>Loading...</div>}
       {result && (
+          <Paper
+            sx={{
+              p: 2,
+              my: 4,
+              maxWidth: {
+                xs: "90%",
+                sm: "50%",
+              },
+            }}
+          >
+            <Typography variant="body1">{result}</Typography>
+          </Paper>
         <div className={styles.result}>
           <h4>Answer:</h4>
           <p>{result}</p>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
