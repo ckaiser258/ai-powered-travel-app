@@ -1,4 +1,4 @@
-import openAiConfig from "@/lib/openAiConfig";
+import openAiConfig from "@/lib/OpenAI/openAiConfig";
 import { NextApiRequest, NextApiResponse } from "next";
 import { OpenAIApi } from "openai";
 
