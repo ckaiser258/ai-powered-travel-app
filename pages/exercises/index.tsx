@@ -119,7 +119,7 @@ const ExercisesPage: NextPage = () => {
             <Controller
               name="difficultyLevel"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: "Please select a difficulty level." }}
               render={({ field }) => (
                 <FormControl
                   sx={{ width: 300 }}
@@ -143,7 +143,7 @@ const ExercisesPage: NextPage = () => {
                   </Select>
                   {errors.difficultyLevel && (
                     <FormHelperText>
-                      Please select a difficulty level.
+                      {errors.difficultyLevel.message}
                     </FormHelperText>
                   )}
                 </FormControl>

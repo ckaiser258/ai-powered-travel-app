@@ -42,12 +42,12 @@ const ExerciseForm: React.FC<ExerciseFormProps> = ({ language, phrase }) => {
         <Controller
           name="textToTranslate"
           control={control}
-          rules={{ required: true }}
+          rules={{ required: "Please enter your answer" }}
           render={({ field }) => (
             <TextField
               autoComplete="off"
               error={!!errors.textToTranslate}
-              helperText={errors.textToTranslate && "Please enter your answer"}
+              helperText={errors.textToTranslate?.message}
               size="small"
               label="Enter your answer"
               {...field}

@@ -64,13 +64,15 @@ const TranslateForm: React.FC = () => {
           </Typography>
           <Typography variant="h6">Translate:</Typography>
           <TextField
-            {...register("textToTranslate", { required: true })}
+            {...register("textToTranslate", {
+              required: "Please enter text to translate",
+            })}
             label="Enter text to translate"
             multiline
             rows={4}
             fullWidth
             error={!!errors.textToTranslate}
-            helperText={errors.textToTranslate && "This field is required"}
+            helperText={errors.textToTranslate?.message}
           />
           <Typography variant="h6">To:</Typography>
           <RHFAutocompleteField
