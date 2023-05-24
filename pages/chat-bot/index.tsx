@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import Head from "next/head";
@@ -18,6 +18,17 @@ const ChatBotPage: NextPage = () => {
   } = useForm<FormValues>();
   const [result, setResult] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
+  const stopConversationRef = useRef(false);
+
+  const handleStopConversation = () => {
+    stopConversationRef.current = true;
+    setTimeout(() => {
+      stopConversationRef.current = false;
+    }, 1000);
+  };
+
+  const controller = new AbortController();
+  const signal = controller.signal;
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     const { prompt } = formData;
@@ -31,7 +42,7 @@ const ChatBotPage: NextPage = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ prompt }),
-        body: JSON.stringify({ prompt: formData.prompt }),
+        signal,
       });
 
       if (!response.ok) {
@@ -51,6 +62,11 @@ const ChatBotPage: NextPage = () => {
       let done = false;
 
       while (!done) {
+        if (stopConversationRef.current) {
+          controller.abort();
+          done = true;
+          break;
+        }
         const { value, done: doneReading } = await reader.read();
         done = doneReading;
         const chunkValue = decoder.decode(value);
@@ -106,6 +122,7 @@ const ChatBotPage: NextPage = () => {
         </Stack>
       </form>
       {result && (
+        <>
           <Paper
             sx={{
               p: 2,
@@ -118,10 +135,17 @@ const ChatBotPage: NextPage = () => {
           >
             <Typography variant="body1">{result}</Typography>
           </Paper>
-        <div className={styles.result}>
-          <h4>Answer:</h4>
-          <p>{result}</p>
-        </div>
+          {loading && (
+            <Button
+              disableRipple
+              variant="outlined"
+              color="secondary"
+              onClick={handleStopConversation}
+            >
+              Stop Generation
+            </Button>
+          )}
+        </>
       )}
     </>
   );

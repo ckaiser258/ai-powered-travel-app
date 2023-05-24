@@ -5,7 +5,10 @@ import {
 } from "eventsource-parser";
 import { CreateChatCompletionRequest } from "openai";
 
-export async function OpenAIStream(payload: CreateChatCompletionRequest) {
+export async function OpenAIStream(
+  payload: CreateChatCompletionRequest,
+  signal: AbortSignal
+) {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
 
@@ -19,6 +22,7 @@ export async function OpenAIStream(payload: CreateChatCompletionRequest) {
     },
     method: "POST",
     body: JSON.stringify(payload),
+    signal,
   });
 
   const stream = new ReadableStream({

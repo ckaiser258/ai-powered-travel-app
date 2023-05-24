@@ -15,29 +15,34 @@ export default async function POST(req: Request): Promise<Response> {
     prompt?: string;
   };
 
+  const { signal } = req;
+
   if (!prompt || !prompt.trim().length) {
     return new Response("No prompt in the request", { status: 400 });
   }
 
   try {
-    const stream = await OpenAIStream({
-      model: "gpt-3.5-turbo",
-      stream: true,
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are ChatGPT, a large language model trained by OpenAI. You are a travel expert. The user is going to ask you a question about traveling to a location. Answer concisely. If the question is not about travel, let the user know that you can't answer anything not related to travel.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      temperature: 0.6,
-      frequency_penalty: 1.0,
-      presence_penalty: 1.0,
-    });
+    const stream = await OpenAIStream(
+      {
+        model: "gpt-3.5-turbo",
+        stream: true,
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are ChatGPT, a large language model trained by OpenAI. You are a travel expert. The user is going to ask you a question about traveling to a location. Answer concisely. If the question is not about travel, let the user know that you can't answer anything not related to travel.",
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+        temperature: 0.6,
+        frequency_penalty: 1.0,
+        presence_penalty: 1.0,
+      },
+      signal
+    );
     return new Response(stream);
   } catch (error) {
     console.error(error);
