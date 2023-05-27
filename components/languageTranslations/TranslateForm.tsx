@@ -88,22 +88,24 @@ const TranslateForm: React.FC = () => {
           </Button>
         </Stack>
       </form>
-      <Paper
-        elevation={1}
-        sx={{
-          p: 2,
-          mb: {
-            xs: 6,
-            sm: 0,
-          },
-        }}
-      >
-        <TranslationResult
-          loading={loading}
-          result={result}
-          textToTranslate={getValues("textToTranslate")}
-        />
-      </Paper>
+      {(result || loading) && (
+        <Paper
+          elevation={1}
+          sx={{
+            p: 2,
+            mb: {
+              xs: 6,
+              sm: 0,
+            },
+          }}
+        >
+          <TranslationResult
+            loading={loading}
+            result={result}
+            textToTranslate={getValues("textToTranslate")}
+          />
+        </Paper>
+      )}
     </>
   );
 };
