@@ -27,15 +27,15 @@ const ChatBotPage: NextPage = () => {
     }, 1000);
   };
 
-  const controller = new AbortController();
-  const signal = controller.signal;
-
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     const { prompt } = formData;
     setResult("");
     setLoading(true);
 
     try {
+      const controller = new AbortController();
+      const signal = controller.signal;
+
       const response = await fetch("/api/chatBot", {
         method: "POST",
         headers: {
