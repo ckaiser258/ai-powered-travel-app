@@ -2,7 +2,7 @@ import RHFAutocompleteField from "@/components/RHFAutocompleteField";
 import ExerciseList from "@/components/exercises/ExerciseList";
 import getExercises from "@/db/exercise/queries/getExercises";
 import { ExerciseLevel } from "@/generated/graphql";
-import { gql, useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import {
   Grid,
   Typography,
@@ -19,29 +19,6 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-
-const GENERATE_RANDOM_EXERCISES = gql`
-  query generateRandomExercises(
-    $difficultyLevel: ExerciseLevel!
-    $userId: ID!
-    $language: String!
-  ) {
-    generateRandomExercises(
-      difficultyLevel: $difficultyLevel
-      userId: $userId
-      language: $language
-    ) {
-      id
-      targetPhrase
-      blank
-      correctAnswer
-      completions {
-        id
-        userId
-      }
-    }
-  }
-`;
 
 interface FormValues {
   difficultyLevel: ExerciseLevel;
@@ -70,17 +47,12 @@ const languageOptions = [
 const ExercisesPage: NextPage = () => {
   const [loading, setLoading] = useState(false);
   const [exercises, setExercises] = useState<string[]>([]);
-  const { data: session } = useSession();
   const {
     handleSubmit,
     control,
     formState: { errors },
     getValues,
   } = useForm<FormValues>();
-
-  // const { data } = useQuery<Query>(GENERATE_RANDOM_EXERCISES, {
-  //   variables: { difficultyLevel, userId: session?.userId, language },
-  // });
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
     setLoading(true);
