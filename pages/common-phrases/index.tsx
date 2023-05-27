@@ -1,3 +1,5 @@
+import { Send } from "@mui/icons-material";
+import { LoadingButton } from "@mui/lab";
 import {
   Box,
   Button,
@@ -13,7 +15,7 @@ import {
 } from "@mui/material";
 import { NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ReactGoogleAutocomplete from "react-google-autocomplete";
 import { useForm, SubmitHandler } from "react-hook-form";
 
@@ -104,29 +106,59 @@ const CommonPhrasesPage: NextPage = () => {
   } = useForm<FormValues>();
   const [result, setResult] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
+  const stopConversationRef = useRef(false);
+
+  const handleStopConversation = () => {
+    stopConversationRef.current = true;
+    setTimeout(() => {
+      stopConversationRef.current = false;
+    }, 1000);
+  };
 
   const onSubmit: SubmitHandler<FormValues> = async (formData) => {
-    // Make sure the previous result is cleared when loading a new one.
+    const { location } = formData;
     setResult("");
     setLoading(true);
+
     try {
+      const controller = new AbortController();
+      const signal = controller.signal;
       const response = await fetch("/api/commonPhrases", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ location: formData.location }),
+        body: JSON.stringify({ location }),
+        signal,
       });
 
-      const data = await response.json();
-      if (response.status !== 200) {
-        throw (
-          data.error ||
-          new Error(`Request failed with status ${response.status}`)
-        );
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      // This data is a ReadableStream
+      const data = response.body;
+      if (!data) {
+        return;
       }
 
-      setResult(data.result);
+      // Set up a reader to stream the response body, similar to ChatGPT.
+      const reader = data.getReader();
+      // // Set up a decoder to decode the binary data from the reader into a string.
+      const decoder = new TextDecoder();
+
+      let done = false;
+
+      while (!done) {
+        if (stopConversationRef.current) {
+          controller.abort();
+          done = true;
+          break;
+        }
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        const chunkValue = decoder.decode(value);
+        setResult((prev) => prev + chunkValue);
+      }
     } catch (error) {
       console.error(error);
       alert(error.message);
@@ -134,7 +166,7 @@ const CommonPhrasesPage: NextPage = () => {
     setLoading(false);
   };
 
-  function renderBulletPoints() {
+  const ResultInBulletPoints: React.FC = () => {
     if (!result) {
       return null;
     }
@@ -143,8 +175,12 @@ const CommonPhrasesPage: NextPage = () => {
     return (
       <Paper
         sx={{
-          m: 4,
-          bgcolor: "primary.light",
+          p: 2,
+          my: 4,
+          maxWidth: {
+            xs: "90%",
+            sm: "50%",
+          },
         }}
       >
         <List>
@@ -163,7 +199,7 @@ const CommonPhrasesPage: NextPage = () => {
         </List>
       </Paper>
     );
-  }
+  };
 
   return (
     <>
@@ -200,13 +236,34 @@ const CommonPhrasesPage: NextPage = () => {
               },
             }}
           />
-          <Button type="submit" variant="contained">
-            Generate Common Phrases
-          </Button>
+          <LoadingButton
+            type="submit"
+            endIcon={<Send />}
+            loading={loading}
+            loadingPosition="end"
+            variant="contained"
+          >
+            {/* Wrapping the contents of this loading button in a span prevents a known current bug in MUI:
+          https://mui.com/material-ui/react-button/#loading-button */}
+            <span>Generate Common Phrases</span>
+          </LoadingButton>
         </Stack>
       </form>
-      {loading && <SkeletonList />}
-      {renderBulletPoints()}
+      {result && (
+        <>
+          <ResultInBulletPoints />
+          {loading && (
+            <Button
+              disableRipple
+              variant="outlined"
+              color="secondary"
+              onClick={handleStopConversation}
+            >
+              Stop Generation
+            </Button>
+          )}
+        </>
+      )}
     </>
   );
 };
