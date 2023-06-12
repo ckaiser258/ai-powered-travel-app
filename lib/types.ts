@@ -6,4 +6,6 @@ interface AppContext {
   token: JWT | null;
 }
 
-export type { AppContext };
+type ExerciseLevel = "beginner" | "intermediate" | "advanced";
+
+export type { AppContext, ExerciseLevel };

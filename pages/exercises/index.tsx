@@ -1,8 +1,7 @@
 import RHFAutocompleteField from "@/components/RHFAutocompleteField";
 import ExerciseList from "@/components/exercises/ExerciseList";
 import getExercises from "@/db/exercise/queries/getExercises";
-import { ExerciseLevel } from "@/generated/graphql";
-import { gql } from "@apollo/client";
+import { ExerciseLevel } from "@/lib/types";
 import {
   Grid,
   Typography,
@@ -25,11 +24,7 @@ interface FormValues {
   language: string;
 }
 
-const difficulties: ExerciseLevel[] = [
-  ExerciseLevel.Beginner,
-  ExerciseLevel.Intermediate,
-  ExerciseLevel.Advanced,
-];
+const difficulties: ExerciseLevel[] = ["beginner", "intermediate", "advanced"];
 
 // TODO: Replace these with the user's saved languages
 const languageOptions = [
