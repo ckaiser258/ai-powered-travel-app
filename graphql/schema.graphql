@@ -6,40 +6,16 @@ type User {
   email: String!
   emailVerified: Date
   image: String
-  completions: [Completion!]!
-  createdAt: Date
-  updatedAt: Date
-}
-
-enum ExerciseLevel {
-  beginner
-  intermediate
-  advanced
-}
-
-type Exercise {
-  id: ID!
-  targetPhrase: String!
-  blank: String!
-  correctAnswer: String!
-  language: String!
-  difficultyLevel: ExerciseLevel!
-  completions: [Completion!]!
-  createdAt: Date
-  updatedAt: Date
-}
-
-type Completion {
-  id: ID!
-  user: User!
-  userId: ID!
-  exercise: Exercise!
-  exerciseId: ID!
-  correct: Boolean
+  languagesToLearn: [String]
   createdAt: Date
   updatedAt: Date
 }
 
 type Query {
   info: String!
+  getLanguagesToLearn(userId: ID!): [String]
+}
+
+type Mutation {
+  createLanguageToLearn(userId: ID!, language: String!): String
 }
