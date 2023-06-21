@@ -18,4 +18,5 @@ type Query {
 
 type Mutation {
   createLanguageToLearn(userId: ID!, language: String!): String
+  deleteLanguageToLearn(userId: ID!, language: String!): String
 }
