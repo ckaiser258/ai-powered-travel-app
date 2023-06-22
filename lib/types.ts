@@ -8,4 +8,11 @@ interface AppContext {
 
 type ExerciseLevel = "beginner" | "intermediate" | "advanced";
 
+declare module "next-auth" {
+  interface Session {
+    userId: string;
+    isNewUser: boolean;
+  }
+}
+
 export type { AppContext, ExerciseLevel };
