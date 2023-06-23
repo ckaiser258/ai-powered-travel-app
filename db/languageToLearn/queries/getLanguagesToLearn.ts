@@ -11,7 +11,7 @@ const getLanguagesToLearn = async (
       id: args.userId,
     },
   });
-  return user.languagesToLearn;
+  return user.languagesToLearn.sort();
 };
 
 export default getLanguagesToLearn;
