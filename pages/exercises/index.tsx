@@ -18,6 +18,7 @@ import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import Link from "@/components/Link";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { signIn, useSession } from "next-auth/react";
 import { Query } from "@/generated/graphql";
@@ -124,6 +125,31 @@ const ExercisesPage: NextPage = () => {
       <Typography variant="h3" mb={3} textAlign="center">
         Language Exercises
       </Typography>
+
+      {status !== "authenticated" ? (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={async () =>
+            await signIn("github", {
+              callbackUrl: "/exercises/?addNewLanguages=true",
+            })
+          }
+        >
+          Sign In To Add New Languages
+        </Button>
+      ) : (
+        <Link
+          href="/exercises/?addNewLanguages=true"
+          underline="none"
+          color="inherit"
+        >
+          <Button variant="contained" color="primary">
+            Add New Languages
+          </Button>
+        </Link>
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid
           container
