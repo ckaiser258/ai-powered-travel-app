@@ -11,7 +11,7 @@ type ExerciseLevel = "beginner" | "intermediate" | "advanced";
 declare module "next-auth" {
   interface Session {
     userId: string;
-    isNewUser: boolean;
+    isNewUser: boolean | unknown; // Adding unknown here because isNewUser on the Token type is unknown, so this prevents them from clashing.
   }
 }
 
