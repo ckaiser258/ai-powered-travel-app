@@ -18,11 +18,16 @@ export const authOptions = {
       session.isNewUser = token.isNewUser;
       return session;
     },
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token, trigger, user, account, profile, isNewUser }) {
       // Set an isNewUser property on the token to pass it to the session client-side.
       if (account) {
         token.isNewUser = isNewUser;
       }
+
+      if (trigger === "update") {
+        token.isNewUser = false;
+      }
+
       return token;
     },
   },
