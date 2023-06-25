@@ -14,7 +14,6 @@ import {
   Box,
 } from "@mui/material";
 import { NextPage } from "next";
-import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
@@ -23,6 +22,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { signIn, useSession } from "next-auth/react";
 import { Query } from "@/generated/graphql";
 import ISO6391 from "iso-639-1";
+import AddOrRemoveLanguagesToLearnDialog from "@/components/exercises/AddOrRemoveLanguagesToLearnDialog";
 import { useRouter } from "next/router";
 
 const GET_LANGUAGES_TO_LEARN_QUERY = gql`
@@ -238,6 +238,11 @@ const ExercisesPage: NextPage = () => {
         loading={loading}
         exercises={exercises}
         language={getValues("language")}
+      />
+      <AddOrRemoveLanguagesToLearnDialog
+        open={!!router.query.addNewLanguages}
+        refetch={refetch}
+        currentLanguagesToLearn={data?.getLanguagesToLearn || []}
       />
     </>
   );
