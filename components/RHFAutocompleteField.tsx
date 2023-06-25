@@ -1,5 +1,5 @@
 import { Controller, Control, FieldValues, Path } from "react-hook-form";
-import { Autocomplete, TextField, Typography } from "@mui/material";
+import { Autocomplete, CircularProgress, TextField } from "@mui/material";
 
 interface RHFAutocompleteFieldProps<
   O extends { label: string; value: string },
@@ -11,6 +11,7 @@ interface RHFAutocompleteFieldProps<
   label: string;
   requiredMessage?: string;
   freeSolo?: boolean;
+  loading?: boolean;
 }
 
 // A reusable component that wraps the Material UI Autocomplete
@@ -21,7 +22,8 @@ const RHFAutocompleteField = <
 >(
   props: RHFAutocompleteFieldProps<O, TField>
 ) => {
-  const { control, name, options, label, requiredMessage, freeSolo } = props;
+  const { control, name, options, label, requiredMessage, freeSolo, loading } =
+    props;
   return (
     <Controller
       name={name}
@@ -54,6 +56,7 @@ const RHFAutocompleteField = <
                 freeSolo ? (event, value) => onChange(value) : null
               }
               options={options}
+              loading={loading}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -61,6 +64,17 @@ const RHFAutocompleteField = <
                   inputRef={ref}
                   error={!!error}
                   helperText={error?.message}
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <>
+                        {loading ? (
+                          <CircularProgress color="inherit" size={20} />
+                        ) : null}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  }}
                 />
               )}
             />
