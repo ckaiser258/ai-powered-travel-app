@@ -29,7 +29,7 @@ const deleteLanguagesToLearn = async (
     throw new Error(
       `User does not have ${languagesToLearnThatDoNotExist.join(
         ", "
-      )} in their languagesToLearn`
+      )} in their languages to learn`
     );
   }
 

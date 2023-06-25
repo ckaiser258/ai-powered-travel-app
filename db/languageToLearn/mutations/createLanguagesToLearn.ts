@@ -29,7 +29,7 @@ const createLanguagesToLearn = async (
     throw new Error(
       `User already has ${languagesToLearnThatAlreadyExist.join(
         ", "
-      )} in their languagesToLearn`
+      )} in their languages to learn`
     );
   }
 
