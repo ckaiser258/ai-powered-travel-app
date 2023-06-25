@@ -1,14 +1,12 @@
 import { Send } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import {
-  Box,
   Button,
   InputBaseComponentProps,
   List,
   ListItem,
   ListItemText,
   Paper,
-  Skeleton,
   Stack,
   TextField,
   Typography,
@@ -27,55 +25,6 @@ interface FormValues {
 // we need to use NEXT_PUBLIC_ prefix to make sure it's exposed.
 // Therefore it's important to limit its domain usage on the Google Cloud Console side of things.
 const GOOGLE_MAPS_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-
-const SkeletonList = () => {
-  const skeletonArray: JSX.Element[] = [];
-  for (let i = 0; i < 10; i++) {
-    skeletonArray.push(
-      <Box
-        my={1}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        key={i}
-      >
-        <Skeleton
-          variant="circular"
-          width={20}
-          height={20}
-          animation="wave"
-          sx={{ mr: 1 }}
-        />
-        <Skeleton
-          sx={{
-            width: {
-              xs: 275,
-              sm: 700,
-            },
-          }}
-          animation="wave"
-        />
-      </Box>
-    );
-  }
-
-  return (
-    <Paper
-      sx={{
-        m: 4,
-        bgcolor: "primary.light",
-      }}
-    >
-      <List dense>
-        {skeletonArray.map((skeleton, index) => (
-          <ListItem key={index}>
-            <ListItemText primary={skeleton} />
-          </ListItem>
-        ))}
-      </List>
-    </Paper>
-  );
-};
 
 // This seems to be required to prevent a bug after a form error occurs.
 const GoogleAutocompleteComponent: React.FC<InputBaseComponentProps> = ({
