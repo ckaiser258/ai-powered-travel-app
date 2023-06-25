@@ -33,4 +33,9 @@ export default startServerAndCreateNextHandler(server, {
   }),
 });
 
-console.log("Apollo Server is running on http://localhost:3000/api");
+const baseUrl =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://aitravelapp.vercel.app";
+
+console.log(`🚀 Apollo Server is running at ${baseUrl}/api`);
