@@ -196,12 +196,7 @@ const CommonPhrasesPage: NextPage = () => {
           https://mui.com/material-ui/react-button/#loading-button */}
             <span>Generate Common Phrases</span>
           </LoadingButton>
-        </Stack>
-      </form>
-      {result && (
-        <>
-          <ResultInBulletPoints />
-          {loading && (
+          {result && loading && (
             <Button
               disableRipple
               variant="outlined"
@@ -211,8 +206,9 @@ const CommonPhrasesPage: NextPage = () => {
               Stop Generation
             </Button>
           )}
-        </>
-      )}
+        </Stack>
+      </form>
+      {result && <ResultInBulletPoints />}
     </>
   );
 };
