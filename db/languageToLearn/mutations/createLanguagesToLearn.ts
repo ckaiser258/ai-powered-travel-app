@@ -26,10 +26,8 @@ const createLanguagesToLearn = async (
   });
 
   if (languagesToLearnThatAlreadyExist.length) {
-    throw new Error(
-      `User already has ${languagesToLearnThatAlreadyExist.join(
-        ", "
-      )} in their languages to learn`
+    args.languages = args.languages.filter(
+      (language) => !languagesToLearnThatAlreadyExist.includes(language)
     );
   }
 
