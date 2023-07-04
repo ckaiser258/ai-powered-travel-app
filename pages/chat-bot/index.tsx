@@ -121,7 +121,7 @@ const ChatBotPage: NextPage = () => {
           https://mui.com/material-ui/react-button/#loading-button */}
             <span>Ask Chat Bot</span>
           </LoadingButton>
-          {loading && (
+          {result && loading && (
             <Button
               disableRipple
               variant="outlined"
