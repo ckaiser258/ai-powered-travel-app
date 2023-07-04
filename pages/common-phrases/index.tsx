@@ -56,6 +56,7 @@ const CommonPhrasesPage: NextPage = () => {
   const [result, setResult] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
   const stopConversationRef = useRef(false);
+  const bottomOfMessagesRef = useRef<HTMLDivElement>(null);
 
   const handleStopConversation = () => {
     stopConversationRef.current = true;
@@ -107,6 +108,7 @@ const CommonPhrasesPage: NextPage = () => {
         done = doneReading;
         const chunkValue = decoder.decode(value);
         setResult((prev) => prev + chunkValue);
+        bottomOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
       }
     } catch (error) {
       console.error(error);
@@ -208,7 +210,12 @@ const CommonPhrasesPage: NextPage = () => {
           )}
         </Stack>
       </form>
-      {result && <ResultInBulletPoints />}
+      {result && (
+        <>
+          <ResultInBulletPoints />
+          <div ref={bottomOfMessagesRef} />
+        </>
+      )}
     </>
   );
 };

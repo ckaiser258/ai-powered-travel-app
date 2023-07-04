@@ -19,6 +19,7 @@ const ChatBotPage: NextPage = () => {
   const [result, setResult] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
   const stopConversationRef = useRef(false);
+  const bottomOfMessagesRef = useRef<HTMLDivElement>(null);
 
   const handleStopConversation = () => {
     stopConversationRef.current = true;
@@ -71,6 +72,7 @@ const ChatBotPage: NextPage = () => {
         done = doneReading;
         const chunkValue = decoder.decode(value);
         setResult((prev) => prev + chunkValue);
+        bottomOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
       }
     } catch (error) {
       console.error(error);
@@ -132,18 +134,21 @@ const ChatBotPage: NextPage = () => {
         </Stack>
       </form>
       {result && (
-        <Paper
-          sx={{
-            p: 2,
-            my: 4,
-            maxWidth: {
-              xs: "90%",
-              sm: "50%",
-            },
-          }}
-        >
-          <Typography variant="body1">{result}</Typography>
-        </Paper>
+        <>
+          <Paper
+            sx={{
+              p: 2,
+              my: 4,
+              maxWidth: {
+                xs: "90%",
+                sm: "50%",
+              },
+            }}
+          >
+            <Typography variant="body1">{result}</Typography>
+          </Paper>
+          <div ref={bottomOfMessagesRef} />
+        </>
       )}
     </>
   );
