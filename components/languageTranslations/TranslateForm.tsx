@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { TextField, Typography, Button, Paper, Stack } from "@mui/material";
 import ISO6391 from "iso-639-1";
@@ -18,6 +18,7 @@ const options = ISO6391.getAllNames().map((language) => ({
 const TranslateForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
+  const resultRef = useRef<HTMLDivElement>(null);
 
   const {
     handleSubmit,
@@ -55,6 +56,12 @@ const TranslateForm: React.FC = () => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [result]);
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -89,22 +96,25 @@ const TranslateForm: React.FC = () => {
         </Stack>
       </form>
       {(result || loading) && (
-        <Paper
-          elevation={1}
-          sx={{
-            p: 2,
-            mb: {
-              xs: 6,
-              sm: 0,
-            },
-          }}
-        >
-          <TranslationResult
-            loading={loading}
-            result={result}
-            textToTranslate={getValues("textToTranslate")}
-          />
-        </Paper>
+        <>
+          <Paper
+            elevation={1}
+            sx={{
+              p: 2,
+              mb: {
+                xs: 6,
+                sm: 0,
+              },
+            }}
+          >
+            <TranslationResult
+              loading={loading}
+              result={result}
+              textToTranslate={getValues("textToTranslate")}
+            />
+          </Paper>
+          <div ref={resultRef} />
+        </>
       )}
     </>
   );
