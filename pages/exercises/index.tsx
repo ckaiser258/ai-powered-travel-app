@@ -18,7 +18,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import Link from "@/components/Link";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { signIn, useSession } from "next-auth/react";
 import { Query } from "@/generated/graphql";
 import ISO6391 from "iso-639-1";
@@ -61,15 +61,8 @@ const ExercisesPage: NextPage = () => {
   const [exercises, setExercises] = useState<string[]>([]);
   const router = useRouter();
   const { data: session, status, update } = useSession();
-  const {
-    data,
-    loading: loadingLanguages,
-    refetch,
-  } = useQuery<Query>(GET_LANGUAGES_TO_LEARN_QUERY, {
-    variables: {
-      userId: session?.userId,
-    },
-  });
+  const [getLanguagesToLearn, { data, loading: loadingLanguages, refetch }] =
+    useLazyQuery<Query>(GET_LANGUAGES_TO_LEARN_QUERY);
   const [createDemoLanguagesToLearn] = useMutation(
     CREATE_DEMO_LANGUAGES_TO_LEARN_MUTATION
   );
@@ -81,12 +74,21 @@ const ExercisesPage: NextPage = () => {
     })
   );
 
+  const demoLanguagesOptions = demoLanguages.map((language) => ({
+    label: language,
+    value: ISO6391.getCode(language),
+  }));
+
   useEffect(() => {
+    if (status === "authenticated") {
+      getLanguagesToLearn({ variables: { userId: session?.userId } });
+    }
+
     const createDemoLanguagesIfNewUser = async () => {
       if (status === "authenticated" && session?.isNewUser) {
         await createDemoLanguagesToLearn({
           variables: {
-            userId: session.userId,
+            userId: session?.userId,
             languages: demoLanguages,
           },
         });
@@ -100,7 +102,14 @@ const ExercisesPage: NextPage = () => {
     };
 
     createDemoLanguagesIfNewUser();
-  }, [status, session, update, createDemoLanguagesToLearn, refetch]);
+  }, [
+    status,
+    session,
+    update,
+    createDemoLanguagesToLearn,
+    refetch,
+    getLanguagesToLearn,
+  ]);
 
   const {
     handleSubmit,
@@ -163,7 +172,13 @@ const ExercisesPage: NextPage = () => {
             <RHFAutocompleteField
               control={control}
               name="language"
-              options={languagesToLearnOptions || []}
+              options={
+                // We need to check for session loading here because Apollo's loading state won't apply for demoLanguagesOptions (which are only used for users not logged in)
+                // Which would cause the loading state of this component to never be true
+                status !== "loading" && status !== "authenticated"
+                  ? demoLanguagesOptions
+                  : languagesToLearnOptions || []
+              }
               label="Select a Language"
               requiredMessage="Please select a language"
               loading={loadingLanguages}
