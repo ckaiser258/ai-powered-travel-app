@@ -119,22 +119,6 @@ const ChatBotPage: NextPage = () => {
           https://mui.com/material-ui/react-button/#loading-button */}
             <span>Ask Chat Bot</span>
           </LoadingButton>
-        </Stack>
-      </form>
-      {result && (
-        <>
-          <Paper
-            sx={{
-              p: 2,
-              my: 4,
-              maxWidth: {
-                xs: "90%",
-                sm: "50%",
-              },
-            }}
-          >
-            <Typography variant="body1">{result}</Typography>
-          </Paper>
           {loading && (
             <Button
               disableRipple
@@ -145,7 +129,21 @@ const ChatBotPage: NextPage = () => {
               Stop Generation
             </Button>
           )}
-        </>
+        </Stack>
+      </form>
+      {result && (
+        <Paper
+          sx={{
+            p: 2,
+            my: 4,
+            maxWidth: {
+              xs: "90%",
+              sm: "50%",
+            },
+          }}
+        >
+          <Typography variant="body1">{result}</Typography>
+        </Paper>
       )}
     </>
   );
