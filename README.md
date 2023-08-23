@@ -72,7 +72,9 @@ The Chatbot feature allows users to ask questions about travel-related topics. T
 ---
 
 ### Add and Remove Languages
+
 Users have the power to add or remove any languages they'd like to learn.
+
 ![Adding Languages To Learn](https://github.com/ckaiser258/ai-powered-travel-app/assets/62724182/ffefb307-03ae-409f-8036-ea8f1274625a)
 
 ![Removing Languages To Learn](https://github.com/ckaiser258/ai-powered-travel-app/assets/62724182/b9a7fe39-5bf7-45bd-aec3-58d09fd9da24)
