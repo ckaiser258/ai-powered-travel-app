@@ -55,7 +55,7 @@ The app offers language learning exercises to help users improve their language 
 
 ### Common Phrases Generator
 
-The Common Phrases Generator feature allows users to generate common phrases for any location on earth. By selecting a specific location, users can get useful phrases and expressions commonly used in that location.
+The Common Phrases Generator feature leverages the Google Maps API and the OpenAI API to provide useful phrases and expressions for any location on earth. Users can select a specific location and get common phrases and expressions commonly used in that location, what they mean, as well as their phonetic pronunciations.
 
 ![Common_Phrases_Feature](https://github.com/ckaiser258/ai-powered-travel-app/assets/62724182/1b34b3e3-722e-465a-ad62-06dee18d4ec1)
 
