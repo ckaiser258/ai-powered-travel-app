@@ -28,7 +28,7 @@ To get started with the AI-Powered Travel App, follow these steps:
 1. Clone the repository: `git clone https://github.com/ckaiser258/ai-powered-travel-app.git`
 2. Install the dependencies: `npm install`
 3. Set up the environment variables by creating a `.env` file. Use the provided `.env.example` file as a template.
-4. Ensure you have a PostgreSQL instance running (if you don't have the PostgreSQL App, installation instructions are below). Then create the Prisma/PostgreSQL database and generate the Prisma Client: `npx prisma migrate dev`
+4. Ensure you have a PostgreSQL instance running (if you don't have the PostgreSQL App, installation instructions are below). Then create the Prisma/PostgreSQL database/generate the Prisma Client: `npx prisma migrate dev`
 5. Start the development server: `npm run dev`
 6. Access the app in your browser at `http://localhost:3000`
 
